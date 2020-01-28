@@ -1,2 +1,2 @@
 # Minor-2
-Testing CI
+Test 2
