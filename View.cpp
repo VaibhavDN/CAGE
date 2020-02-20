@@ -136,7 +136,7 @@ void editorspace::draw(user_canvas *u1)
 				}
 				else if(e1.type == sf::Event::KeyPressed)
 				{
-					if(e1.key.code == sf::Keyboard::Enter)
+					if(e1.key.code == sf::Keyboard::Return)
 					{
 						u1->append_entry('\n');
 					}
