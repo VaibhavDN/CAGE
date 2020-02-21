@@ -1,114 +1,114 @@
-alignas
-alignof
-and
-and_eq
-asm
-atomic_cancel
-atomic_commit
-atomic_noexcept
-auto
-bitand
-bitor
-bool
-break
-case
-catch
-char
-char8_t
-char16_t
-char32_t
-class
-compl
-concept
-const
-consteval
-constexpr
-constinit
-const_cast
-continue
-co_await
-co_return
-co_yield
-cout
-cin
-decltype
-default
-delete
-do
-double
-dynamic_cast
-else
-enum
-explicit
-export
-extern
-endl
-false
-float
-for
-friend
-goto
-if
-inline
-int
-long
-include
-mutable
-map
-namespace
-new
-noexcept
-not
-not_eq
-nullptr
-null
-operator
-or
-or_eq
-private
-protected
-public
-queue
-reflexpr
-register
-reinterpret_cast
-requires
-return
-short
-signed
-sizeof
-static
-static_assert
-static_cast
-string
-struct
-switch
-set
-synchronized
-template
-this
-thread_local
-throw
-true
-try
-typedef
-typeid
-typename
-union
-unsigned
-using
-virtual
-void
-volatile
-vector
-wchar_t
-while
-xor
-xor_eq
-override
-final
-import
-module
-memset
-transaction_safe
-transaction_safe_dynamic
+alignas 11
+alignof 11
+and 11
+and_eq 11
+asm 11
+atomic_cancel 11
+atomic_commit 11
+atomic_noexcept 11
+auto 0
+bitand 11
+bitor 11
+bool 0
+break 5
+case 3
+catch 4
+char 0
+char11_t 0
+char16_t 0
+char32_t 0
+class 2
+compl 11
+concept 11
+const 11
+consteval 11
+constexpr 11
+constinit 11
+const_cast 11
+continue 5
+co_await 11
+co_return 6
+co_yield 6
+cout 11
+cin 11
+decltype 0
+default 3
+delete 7
+do 8
+double 0
+dynamic_cast 11
+else 3
+enum 2
+explicit 11
+export 11
+extern 11
+endl 11
+false 11
+float 0
+for 8
+friend 2
+goto 11
+if 3
+inline 11
+int 0
+long 0
+include 10
+mutable 11
+map 9
+namespace 11
+new 7
+noexcept 4
+not 11
+not_eq 11
+nullptr 11
+null 11
+operator 11
+or 11
+or_eq 11
+private 11
+protected 11
+public 11
+queue 9
+reflexpr 11
+register 11
+reinterpret_cast 11
+requires 11
+return 6
+short 0
+signed 0
+sizeof 11
+static 0
+static_assert 0
+static_cast 0
+string 1
+struct 2
+switch 3
+set 9
+synchronized 11
+template 11
+this 11
+thread_local 11
+throw 4
+true 11
+try 4
+typedef 2
+typeid 11
+typename 11
+union 2
+unsigned 0
+using 11
+virtual 0
+void 0
+volatile 11
+vector 1
+wchar_t 0
+while 8
+xor 11
+xor_eq 11
+override 11
+final 0
+import 11
+module 11
+memset 11
+transaction_safe 11
+transaction_safe_dynamic 11

@@ -9,6 +9,7 @@ class TrieNode{
     private:
     TrieNode *childAlphabet[NO_OF_CHARACTERS];
     bool isEndOfWord = false;
+    int keyWordType = -1;
 
     public:
     TrieNode(){
@@ -26,6 +27,14 @@ class TrieNode{
         isEndOfWord = false;
     }
 
+    void setKeyWordType(int type){
+        keyWordType = type;
+    }
+
+    int getKeyWordType(){
+        return keyWordType;
+    }
+
     bool getIsEndOfWord(){
         return isEndOfWord;
     }
@@ -41,19 +50,22 @@ class Trie{
 
     Trie(){
         string key_word;
-        vector<string> key_words_vector;
+        int key_word_type;
+        vector<pair<string, int> > key_words_vector;
         ifstream filestream("CppKeyWords.txt");
         //filestream.exceptions(ifstream::failbit);
         while(!filestream.eof()){
-            filestream>>key_word;
-            key_words_vector.emplace_back(key_word);
+            filestream>>key_word>>key_word_type;
+            key_words_vector.emplace_back(make_pair(key_word, key_word_type));
         }
         filestream.close();
 
-        for(string key_word : key_words_vector){
+        for(pair<string, int> key_word_pair : key_words_vector){
             //cout<<key_words_vector[key_word]<<endl;
+            key_word = key_word_pair.first;
+            key_word_type = key_word_pair.second;
             try{
-                insertInTrie(key_word);
+                insertInTrie(key_word, key_word_type);
             }
             catch(exception e){
                 cout<<e.what()<<endl;
@@ -65,7 +77,7 @@ class Trie{
         return new TrieNode();
     }
 
-    void insertInTrie(string word){
+    void insertInTrie(string word, int key_word_type){
         if(head == NULL){
             head = createNode();
         }
@@ -98,9 +110,10 @@ class Trie{
         }
         cout<<endl;
         childPointer->setEndOfWord();
+        childPointer->setKeyWordType(key_word_type);
     }
 
-    bool searchInTrie(string wordToSearch){
+    int searchInTrie(string wordToSearch){
         childPointer = head;
         for(int counter=0; counter<wordToSearch.length(); counter++){
             int index = wordToSearch[counter] - 'a';
@@ -112,21 +125,21 @@ class Trie{
             }
 
             if(childPointer->getChildAlphabetArray()[index] == NULL){
-                return false;
+                return -1;
             }
             childPointer = childPointer->getChildAlphabetArray()[index];
         }
 
         if(childPointer->getIsEndOfWord()){
-            return true;
+            return childPointer->getKeyWordType();
         }
 
-        return false;
+        return -1;
     }
 };
 
 int main(){
     Trie trie;
-    cout<<trie.searchInTrie("include")<<endl;
+    cout<<trie.searchInTrie("int")<<endl;
     return 0;
 }
