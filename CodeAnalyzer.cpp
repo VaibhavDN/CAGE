@@ -39,6 +39,28 @@ class Trie{
     public:
     TrieNode *head = NULL, *childPointer = NULL;
 
+    Trie(){
+        string key_word;
+        vector<string> key_words_vector;
+        ifstream filestream("CppKeyWords.txt");
+        //filestream.exceptions(ifstream::failbit);
+        while(!filestream.eof()){
+            filestream>>key_word;
+            key_words_vector.emplace_back(key_word);
+        }
+        filestream.close();
+
+        for(string key_word : key_words_vector){
+            //cout<<key_words_vector[key_word]<<endl;
+            try{
+                insertInTrie(key_word);
+            }
+            catch(exception e){
+                cout<<e.what()<<endl;
+            }
+        }
+    }
+
     TrieNode* createNode(){
         return new TrieNode();
     }
@@ -104,27 +126,7 @@ class Trie{
 };
 
 int main(){
-    string key_word;
-    vector<string> key_words_vector;
-    ifstream filestream("CppKeyWords.txt");
-    //filestream.exceptions(ifstream::failbit);
-    while(!filestream.eof()){
-        filestream>>key_word;
-        key_words_vector.emplace_back(key_word);
-    }
-    filestream.close();
-
     Trie trie;
-
-    for(string key_word : key_words_vector){
-        //cout<<key_words_vector[key_word]<<endl;
-        try{
-            trie.insertInTrie(key_word);
-        }
-        catch(exception e){
-            cout<<e.what()<<endl;
-        }
-    }
-    cout<<trie.searchInTrie("i")<<endl;
+    cout<<trie.searchInTrie("include")<<endl;
     return 0;
 }
