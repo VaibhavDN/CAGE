@@ -15,4 +15,6 @@ jobs:
         sudo apt-get install libsfml-dev -y
         sudo apt autoremove
     - name: Compile
-      run: g++ View.cpp -o View -lsfml-system -lsfml-window -lsfml-graphics -lpthread
+      run: |
+        g++ -c *.cpp
+        rm *.o
