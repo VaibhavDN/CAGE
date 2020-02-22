@@ -1,9 +1,35 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <map>
+#include <set>
 
 using namespace std;
 #define NO_OF_CHARACTERS 27
+
+class Key_word_category{
+    private:
+    map<int, string> category = {{0, "primaryDT"}, 
+                                {1, "derivedDT"}, 
+                                {2, "abstractDT"}, 
+                                {3, "conditional"},
+                                {4, "exception"},
+                                {5, "break_cont"},
+                                {6, "return_exit"},
+                                {7, "new_delete"},
+                                {8, "loop"},
+                                {9, "datastructure"},
+                                {10, "preprocessor"},
+                                {11, "other_keyword"}};
+
+    map<int, string>::iterator itr;
+
+    public:
+    string getCategory(int key){
+        itr = category.find(key);
+        return itr->second;
+    }
+};
 
 class TrieNode{
     private:
@@ -137,9 +163,3 @@ class Trie{
         return -1;
     }
 };
-
-int main(){
-    Trie trie;
-    cout<<trie.searchInTrie("int")<<endl;
-    return 0;
-}
