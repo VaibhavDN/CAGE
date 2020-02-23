@@ -1,0 +1,12 @@
+Primary dataType / modifiers / auto / decltype 0
+Derived dataType 1
+Abstract / UserDefined dataType 2
+Conditional 3
+Exception 4
+break / continue 5
+return / exit 6
+new / delete 7
+for / while / do 8
+dataStructures 9
+preprocessors 10
+others 11
