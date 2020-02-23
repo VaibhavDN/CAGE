@@ -2,47 +2,55 @@
 #include <iostream>
 #include <vector>
 #include <unistd.h>
+#include <X11/Xlib.h>
 #include <algorithm>
 #include <unordered_map>
+#include <unistd.h>
+#include <thread>
 
 using namespace std;
 
-class user_canvas;
-class editorspace;
-class gui;
 
 class editorspace
 {
 	protected:
-	
+	static sf::RenderWindow *w1;
+	static unordered_map < string, sf::Drawable * > total_buffer;
+	static int szx, szy;
+
 	public:
-	sf::RenderWindow *w1;
-	unordered_map < string, sf::Drawable * > total_buffer;
-	editorspace(int szx, int szy)
+	void push_in_buff(sf::Drawable * g1, string s1)
 	{
-		w1 = new sf::RenderWindow(sf::VideoMode(szx, szy), "CAGE");
-		w1->setVerticalSyncEnabled(true);
+		total_buffer[s1] = g1;
 	}
-	void draw(user_canvas *u1);
 };
 
-class user_canvas
+sf::RenderWindow *editorspace::w1;
+unordered_map < string, sf::Drawable * > editorspace::total_buffer;
+int editorspace::szx = 0;
+int editorspace::szy = 0;
+
+class user_canvas : protected editorspace
 {
-	editorspace *e1;
 	sf::Font font1;
 	sf::Text text1;
 	string str1;
 	public:
-	user_canvas(editorspace *e)
+	user_canvas(int szx1, int szy1)
 	{
+		szx = szx1;
+		szy = szy1;
+		w1 = new sf::RenderWindow(sf::VideoMode(szx, szy), "CAGE");
+		w1->setVerticalSyncEnabled(true);
+
 		font1.loadFromFile("DroidSansMono.ttf");
 		text1.setFont(font1);
 		text1.setString(str1);
-		e1 = e;
-		e1->total_buffer["text1"] = &text1;
+
+		total_buffer["text1"] = &text1;
 		text1.setPosition(sf::Vector2f(5, 45));
-		text1.setCharacterSize(20);
-		text1.setFillColor(sf::Color(0,0,255,255));
+		text1.setCharacterSize(18);
+		text1.setFillColor(sf::Color(4,191,82,255));
 	}
 
 	void append_entry(char a)
@@ -57,77 +65,62 @@ class user_canvas
 		{
 			str1.pop_back();
 			text1.setString(str1);
-		}
-		
-	}
-
-	
+		}	
+	}	
 };
 
-class gui
+class topbar : protected editorspace
 {
-	sf::RectangleShape topbar, toolbar, horzscroll, vertscroll, compile;
-	editorspace *e1;
-
-	void push_in_buff(editorspace e1, sf::Drawable * g1, string s1)
-	{
-		e1.total_buffer[s1] = g1;
-	}
+	sf::RectangleShape topbar1;
 
 	public:
-	gui(editorspace *e)
+	topbar()
 	{
-		e1 = e;
-		int szx = e1->w1->getSize().x;
-		int szy = e1->w1->getSize().y;
+		
+		topbar1.setFillColor(sf::Color::Red);
+		total_buffer["topbar1"] = &topbar1;
+		
+		topbar1.setPosition(sf::Vector2f(0,0));
+		topbar1.setSize(sf::Vector2f(szx, 20));
+	}
+};
 
-		topbar.setFillColor(sf::Color::Red);
-		e1->total_buffer["topbar"] = &topbar;
-		toolbar.setFillColor(sf::Color::Green);
-		e1->total_buffer["toolbar"] = &toolbar;
-		horzscroll.setFillColor(sf::Color::Blue);
-		e1->total_buffer["horzscroll"] = &horzscroll;
+class toolbar : protected editorspace
+{
+	sf::RectangleShape toolbar1;
+
+	public:
+	toolbar()
+	{
+		toolbar1.setFillColor(sf::Color::Green);
+		total_buffer["toolbar1"] = &toolbar1;
+
+		toolbar1.setPosition(sf::Vector2f(0,20));
+		toolbar1.setSize(sf::Vector2f(szx, 20));
+	}
+
+};
+
+class aux : protected editorspace
+{
+	sf::RectangleShape vertscroll;
+
+	public:
+	aux()
+	{
 		vertscroll.setFillColor(sf::Color::Yellow);
-		e1->total_buffer["vertscroll"] = &vertscroll;
-		compile.setFillColor(sf::Color::Black);
-		e1->total_buffer["compile"] = &compile;
-
-		topbar.setPosition(sf::Vector2f(0,0));
-		topbar.setSize(sf::Vector2f(szx, 20));
-
-		toolbar.setPosition(sf::Vector2f(0,20));
-		toolbar.setSize(sf::Vector2f(szx, 20));
+		total_buffer["vertscroll"] = &vertscroll;
 
 		vertscroll.setPosition(sf::Vector2f(szx-10, 40));
 		vertscroll.setSize(sf::Vector2f(10, szy-60));
 
-		horzscroll.setPosition(sf::Vector2f(0, szy-10));
-		horzscroll.setSize(sf::Vector2f(szx-20, 10));
-
-		compile.setPosition(sf::Vector2f(10, toolbar.getPosition().y+toolbar.getSize().y/2-8));
-		compile.setSize(sf::Vector2f(50, 16));
-
-
-
-		
 	}
-	void set_stack_tool()
+
+	void routine(user_canvas *u1)
 	{
-
-	}
-	void set_stack_top()
-	{
-
-	}
-
-};
-
-void editorspace::draw(user_canvas *u1)
-{
-	while (w1->isOpen())
+		sf::Event e1;
+		while(w1->isOpen())
 		{
-			sf::Event e1;
-			
 			while (w1->pollEvent(e1))
 			{
 				if(e1.type == sf::Event::Closed)
@@ -151,22 +144,37 @@ void editorspace::draw(user_canvas *u1)
 					u1->append_entry((char)e1.text.unicode);
 				}
 			}
+		}	
+	}
 
-			w1->clear();
-			for(auto &it : total_buffer)
+	void draw()
+	{
+		sf::Clock cl;
+		while (w1->isOpen())
 			{
-				
-				w1->draw(*it.second);
-			}	
-			w1->display();
-		}
-}
+				cl.restart();
+				w1->clear(sf::Color(112, 89, 89, 255));
+				for(auto &it : total_buffer)
+				{
+					
+					w1->draw(*it.second);
+				}	
+				w1->display();
+				usleep(25000 - cl.restart().asMicroseconds());
+			}
+	}
+};
+
+
 
 int main(int argc, char* argv[])
 {
-	editorspace w1(atoi(argv[1]), atoi(argv[2]));
-	gui g1(&w1);
-	user_canvas u1(&w1);
-	w1.draw(&u1);
-
+	XInitThreads();
+	user_canvas u1(atoi(argv[1]), atoi(argv[2]));
+	topbar to1;
+	toolbar tb1;
+	aux a1;
+	thread t1(&aux::routine, &a1, &u1);
+	a1.draw();
+	t1.join();
 }
