@@ -128,13 +128,13 @@ class Trie{
             }
 
             if(index == 26){
-                cout<<static_cast<char>(index+97-26-2);
+                //cout<<static_cast<char>(index+97-26-2);
             }
             else{
-                cout<<static_cast<char>(index+97);
+                //cout<<static_cast<char>(index+97);
             }
         }
-        cout<<endl;
+        //cout<<endl;
         childPointer->setEndOfWord();
         childPointer->setKeyWordType(key_word_type);
     }

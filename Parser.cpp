@@ -3,31 +3,39 @@
 class FileOperations{
     private:
     string line;
-    string dataInFile;
+    string dataToTokenize;
     vector<vector<string> > intermediate_lang;
 
     public:
-    FileOperations(){
+    void setDataFromFile(string file_name){
         try{
             ifstream stream;
             stream.exceptions(ifstream::failbit);
-            stream.open("usersCode.cpp");
+            stream.open(file_name);
             while(!stream.eof()){
                 getline(stream, line);
-                dataInFile+=line+"\n";
+             dataToTokenize+=line+"\n";
             }
             stream.close();
-        }catch(exception& e){
+        }catch(exception e){
             cout<<"Exception while opening usersCode: "<<e.what()<<endl;
         }
     }
 
-    string getDataInFile(){
-        return dataInFile;
+    void setDataToTokenize(string data){
+        dataToTokenize = data;
+    }
+
+    string getDataToTokenize(){
+        return dataToTokenize;
     }
 
     void setIntermediate_lang_vector(vector<vector<string> > vec){
         intermediate_lang = vec;
+    }
+
+    vector<vector<string> > getIntermediate_lang_vector(){
+        return intermediate_lang;
     }
 
     void write_intermediate_lang(){
@@ -55,10 +63,11 @@ class Splitter : public FileOperations{
     vector<vector<string> >splitLines;
 
     public:
-    Splitter(){
+    void runSplitter(){
+        splitLines.clear();
         vector<string> char_seq_vector;
         string char_sequence = "";
-        string characters = getDataInFile();
+        string characters = getDataToTokenize();
         for(char character : characters){
             if(character == '\n'){
                 if(char_sequence.length() > 0){
@@ -87,6 +96,10 @@ class Splitter : public FileOperations{
             }
             character = '\0';
         }
+    }
+
+    vector<vector<string> > getSplitLinesVector(){
+        return splitLines;
     }
 
     void generateIntermediateLanguage(){
@@ -127,8 +140,10 @@ class Splitter : public FileOperations{
     }
 };
 
-int main(){
+int mainParser(){
     Splitter splitter;
+    splitter.setDataFromFile("usersCode.cpp");
+    splitter.runSplitter();
     splitter.viewSplitLines();
     splitter.generateIntermediateLanguage();
     return 0;
