@@ -63,3 +63,15 @@ Added CopyMaker
 Structural changes to Parser
 
 ***
+
+Vaibhav:
+
+Feb 27, 2020
+
+LineInserter can write flow [flowOutput.txt] and functions span [flowNode.txt] to a file.
+
+Added VisualizeFlow to draw flow graph (WIP)
+
+***
+
+
