@@ -8,11 +8,12 @@ using namespace std;
 int main(){
     set<char> lineToIgnoreIfCharPresent = {'}', ':'};
     stack<char> curlyBrackets;
-    int lineNo = 0, initialized = 0, paranOpen = 0, paranClose = 0, functionOpen = 0, skip = 0;
+    int lineNo = 0, initialized = 0, paranOpen = 0, paranClose = 0, functionOpen = 0, skip = 0, funStartNotifier = 0;
     string line, dataToWrite = "";
 
     Splitter splitter;
 
+    ofstream streamLIFun("flowNode.txt");
     ifstream stream;
     stream.open("usersCode.cpp");
     while(!stream.eof()){
@@ -23,7 +24,7 @@ int main(){
             line.pop_back();
         }
         if(line.length() == 0){
-            lineNo--;
+            //lineNo--;
             continue;
         }
         //cout<<line<<endl;
@@ -42,6 +43,7 @@ int main(){
                 }
                 else if(tokenizedLine[0][counter] == "{" && paranClose == 1){
                     functionOpen = 1;
+                    funStartNotifier = 1;
                     paranOpen = 0;
                     paranClose = 0;
                     dataToWrite+="/*fun=1*/";
@@ -56,6 +58,7 @@ int main(){
             if(tokenizedLine[0][0] == "{" && paranClose == 1){
                 dataToWrite+="/**fun=1*/";
                 functionOpen = 1;
+                funStartNotifier = 1;
                 paranOpen = 0;
                 paranClose = 0;
             }
@@ -74,13 +77,17 @@ int main(){
                             dataToWrite+="/*pop->*/";
                             skip = 1;
                         }
-                        else{
+                        else{   //Function ends
+                            dataToWrite+="/*fun=0*/ ";
+                            if(functionOpen == 1){
+                                streamLIFun<<lineNo<<endl;
+                                dataToWrite+="/*|funEnd|*/ ";
+                            }
                             functionOpen = 0;
-                            dataToWrite+="/*fun=0*/";
                         }
                     }
                     else if(tokenizedLine[0][counter] == "return_exit" && functionOpen == 1){
-                        dataToWrite+="lineNo=" + to_string(lineNo) + "; cout<<\"return_exit-> \"<<lineNo<<endl; ";
+                        dataToWrite+="lineNo=" + to_string(lineNo) + "; streamLI<<lineNo<<endl;";
                         skip = 1;
                     }
                 }
@@ -89,7 +96,11 @@ int main(){
         }
 
         if(functionOpen == 1 && skip == 0){
-            dataToWrite+=line + " lineNo=" + to_string(lineNo) + "; cout<<lineNo<<endl;\n";
+            dataToWrite+=line + " lineNo=" + to_string(lineNo) + "; streamLI<<lineNo<<endl;\n";
+            if(funStartNotifier == 1){
+                funStartNotifier = 0;
+                streamLIFun<<lineNo<<" ";
+            }
         }
         else{
             dataToWrite+=line + "\n";
@@ -99,15 +110,17 @@ int main(){
         if(tokenizedLine[0][0] != "preprocessor" && initialized == 0){
             initialized = 1;
             dataToWrite.pop_back(); //pop \n added by lines above
-            dataToWrite+= " int lineNo=" + to_string(lineNo) + ";\n";
+            dataToWrite+= " int lineNo=" + to_string(lineNo) + ";\n#include <fstream>\nofstream streamLI(\"flowOutput.txt\");\n";
+            //lineNo+=2;
         }
     }
-
     stream.close();
+    streamLIFun.close();
 
     ofstream stream_write;
     stream_write.open("usersFlow.cpp", ios_base::out);
     stream_write<<dataToWrite;
     stream_write.close();
+    mainParser();
     return 0;
 }
