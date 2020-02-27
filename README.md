@@ -74,4 +74,10 @@ Added VisualizeFlow to draw flow graph (WIP)
 
 ***
 
+Vaibhav:
 
+Feb 28, 2020
+
+VisualizeFlow: Draw nodes and show function movement between them.
+
+***
