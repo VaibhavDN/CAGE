@@ -40,6 +40,7 @@ class user_canvas : protected editorspace
 	int transparent = 51;
 	int trans_flag = 1;
 	size_t cur_pos = 0;
+	size_t char_pos = 0;
 	char trigger_flag = 'y';
 	string str1;
 	public:
@@ -71,11 +72,8 @@ class user_canvas : protected editorspace
 	{
 		str1.insert(str1.begin() + cur_pos, a);
 		text1.setString(str1);
-		/*if(trigger_flag == 'y' && a == '\n')
-		{
-			trigger_flag = 'n';
-		}*/
 		++cur_pos;
+		cout<<str1[cur_pos]<<"\n";
 	}
 
 	void back_sp()
