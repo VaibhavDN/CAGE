@@ -3,29 +3,86 @@
 #include <map>
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
+#include "LineInserter.cpp"
 
 using namespace std;
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode(600, 600), "Control Flow");
+    sf::RenderWindow window(sf::VideoMode(1200, 600), "Control Flow");
     window.setVerticalSyncEnabled(true);
 
+    LineInserter lineInserter;
+    lineInserter.mainLineInserter();
+    //exit(0);
+    vector<string> block_first_line = lineInserter.getFunFirstLine();
+    reverse(block_first_line.begin(), block_first_line.end());
+    vector<sf::Text> fun_name;
+    sf::Text text;
+    sf::Font font;
+    font.loadFromFile("FiraSans-Book.otf");
+    text.setFont(font);
+
+    sf::Texture texture;
+    texture.loadFromFile("pearl.jpg");
+    texture.setSmooth(true);
     sf::CircleShape functions;
+    functions.setTextureRect(sf::IntRect(130,130,730,730));
+    functions.setTexture(&texture);
     functions.setRadius(20);
     functions.setOrigin(sf::Vector2f(functions.getRadius(), functions.getRadius()));
-    functions.setFillColor(sf::Color::Cyan);
+    //functions.setFillColor(sf::Color(255,0,0,200));
     map<int, sf::CircleShape> display_node;
 
     map<int, int> fun_map;
-    int fun_start, fun_end, Y=30;
+    vector<int> depthwise_x, depthwise_y;
+    int fun_start, fun_end, X=0, Y=-50, level=0, level_prev=0, depth=0;
+    depthwise_x.emplace_back(X);
+    depthwise_y.emplace_back(Y);
     ifstream streamNode, streamFlow;
     streamNode.open("flowNode.txt");
     while(!streamNode.eof()){
-        streamNode>>fun_start>>fun_end;
+        streamNode>>fun_start>>fun_end>>level;
+        if(level == 0){
+            Y=depthwise_y.back();
+            Y+=80;
+            depthwise_y.emplace_back(Y);
+            depth++;
+            X=80;
+            depthwise_x.emplace_back(X);
+        }
+        else if(level > level_prev){
+            Y=depthwise_y[depth];
+            Y+=80;
+            depthwise_y.emplace_back(Y);
+            depth++;
+            X=80;
+            depthwise_x.emplace_back(X);
+        }
+        else if(level < level_prev){
+            depth--;
+            Y=depthwise_y[depth];
+            X=depthwise_x[depth]+300;
+            depthwise_x[depth] = X;
+        }
+        else{
+            X=depthwise_x[depth]+300;
+            depthwise_x[depth] = X;
+        }
+        level_prev = level;
         fun_map.insert(pair<int, int>(fun_start, fun_end));
-        functions.setPosition(sf::Vector2f(300, Y));
+        functions.setPosition(sf::Vector2f(X, Y));
         display_node.insert(pair<int, sf::CircleShape>(fun_start, functions));
-        Y+=80;
+
+        if(block_first_line.size() > 0){
+            text.setString(block_first_line.back());
+            cout<<block_first_line.back()<<endl;
+            text.setFillColor(sf::Color::Black);
+            text.setCharacterSize(12);
+            text.setPosition(sf::Vector2f(functions.getPosition().x - 20, functions.getPosition().y + 30));
+            fun_name.emplace_back(text);
+            block_first_line.pop_back();
+        }
+        
     }
     streamNode.close();
 
@@ -57,19 +114,22 @@ int main(){
             }
             lower_bound = itr->first;
             cout<<"lineNo: "<<flow.at(lineItr)<<" lower_bound: "<<lower_bound<<endl;
-            display_node.at(lower_bound).setFillColor(sf::Color::Red);
+            display_node.at(lower_bound).setFillColor(sf::Color(255, 217, 179));
             lineItr++;
             sleep(1);
         }
         else{
-            display_node.at(lower_bound).setFillColor(sf::Color::Black);
+            display_node.at(lower_bound).setFillColor(sf::Color::Red);
         }
 
-        window.clear(sf::Color::Magenta);
+        window.clear(sf::Color::White);
+        int counter = 0;
         for(map<int, int>::iterator itr=fun_map.begin(); itr!=fun_map.end(); itr++){
             window.draw(display_node.at(itr->first));
+            window.draw(fun_name.at(counter));
+            counter++;
         }
-        display_node.at(lower_bound).setFillColor(sf::Color::Cyan);
+        display_node.at(lower_bound).setFillColor(sf::Color::White);
         window.display();
     }
     return 0;
