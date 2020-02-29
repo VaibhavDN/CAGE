@@ -81,3 +81,13 @@ Feb 28, 2020
 VisualizeFlow: Draw nodes and show function movement between them.
 
 ***
+
+Vaibhav:
+
+March 1, 2020
+
+VisualizeFlow: Added code block visualization functionality
+
+Changes to LineInserter to help Visualizer
+
+***
