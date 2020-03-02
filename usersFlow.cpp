@@ -9,43 +9,43 @@ class Node{
     vector<pair<string, int> >variable_records;
     Node *leftPtr = NULL, *rightPtr = NULL;
     public:
-    Node(string dataType, int lineNumber){
-        variable_records.emplace_back(make_pair(dataType, lineNumber));
-/*fun=0*/     }
+/*fun=1*/    Node(string dataType, int lineNumber){ lineNo=12; streamLI<<lineNo<<endl;
+        variable_records.emplace_back(make_pair(dataType, lineNumber)); lineNo=13; streamLI<<lineNo<<endl;
+/*fun=0*/ /*|funEnd|*/     }
 /*fun=1*/    void setRightPtr(Node *ptrReceived){ lineNo=16; streamLI<<lineNo<<endl;
         rightPtr = ptrReceived; lineNo=17; streamLI<<lineNo<<endl;
 /*fun=0*/ /*|funEnd|*/     }
 /*fun=1*/    void setLeftPtr(Node *ptrReceived){ lineNo=20; streamLI<<lineNo<<endl;
         leftPtr = ptrReceived; lineNo=21; streamLI<<lineNo<<endl;
 /*fun=0*/ /*|funEnd|*/     }
-    Node* getRightPtr(){
-        return rightPtr;
-/*fun=0*/     }
-    Node* getLeftPtr(){
-        return leftPtr;
-/*fun=0*/     }
-    vector<pair<string, int> > getData(){
-        return variable_records;
-/*fun=0*/     }
-/*fun=0*/ };
+/*fun=1*/    Node* getRightPtr(){ lineNo=24; streamLI<<lineNo<<endl;
+lineNo=25; streamLI<<lineNo<<endl;        return rightPtr;
+/*fun=0*/ /*|funEnd|*/     }
+/*fun=1*/    Node* getLeftPtr(){ lineNo=28; streamLI<<lineNo<<endl;
+lineNo=29; streamLI<<lineNo<<endl;        return leftPtr;
+/*fun=0*/ /*|funEnd|*/     }
+/*fun=1*/    vector<pair<string, int> > getData(){ lineNo=32; streamLI<<lineNo<<endl;
+lineNo=33; streamLI<<lineNo<<endl;        return variable_records;
+/*fun=0*/ /*|funEnd|*/     }
+};
 class BST{
     private:
-    Node* createNewNode(string dataType, int lineNumber){
-        return new Node(dataType, lineNumber);
-/*fun=0*/     }
+/*fun=1*/    Node* createNewNode(string dataType, int lineNumber){ lineNo=39; streamLI<<lineNo<<endl;
+lineNo=40; streamLI<<lineNo<<endl;        return new Node(dataType, lineNumber);
+/*fun=0*/ /*|funEnd|*/     }
     public:
-    Node* insert(Node *root, string dataType, int lineNumber){
-        if(root == NULL){
-            root = createNewNode(dataType, lineNumber);
-/*fun=0*/         }
-        else if(root->getData().at(0).second <= lineNumber){
-            root->setRightPtr(insert(root->getRightPtr(), dataType, lineNumber));
-/*fun=0*/         }
-        else{
-            root->setLeftPtr(insert(root->getLeftPtr(), dataType, lineNumber));
-/*fun=0*/         }
-        return root;
-/*fun=0*/     }
+/*fun=1*/    Node* insert(Node *root, string dataType, int lineNumber){ lineNo=44; streamLI<<lineNo<<endl;
+/*push->*/        if(root == NULL){ lineNo=45; streamLI<<lineNo<<endl;
+            root = createNewNode(dataType, lineNumber); lineNo=46; streamLI<<lineNo<<endl;
+/*pop->*/        }
+/*push->*/        else if(root->getData().at(0).second <= lineNumber){ lineNo=48; streamLI<<lineNo<<endl;
+            root->setRightPtr(insert(root->getRightPtr(), dataType, lineNumber)); lineNo=49; streamLI<<lineNo<<endl;
+/*pop->*/        }
+/*push->*/        else{ lineNo=51; streamLI<<lineNo<<endl;
+            root->setLeftPtr(insert(root->getLeftPtr(), dataType, lineNumber)); lineNo=52; streamLI<<lineNo<<endl;
+/*pop->*/        }
+lineNo=55; streamLI<<lineNo<<endl;        return root;
+/*fun=0*/ /*|funEnd|*/     }
     //* BFS
 /*fun=1*/    void displayData(Node *root){ lineNo=59; streamLI<<lineNo<<endl;
 /*push->*/        if(root == NULL){ lineNo=60; streamLI<<lineNo<<endl;
@@ -88,7 +88,7 @@ lineNo=61; streamLI<<lineNo<<endl;            return;
             breadth_first.pop(); lineNo=104; streamLI<<lineNo<<endl;
 /*pop->*/        }
 /*fun=0*/ /*|funEnd|*/     }
-/*fun=0*/ };
+};
 /*fun=1*/int main(){ lineNo=109; streamLI<<lineNo<<endl;
     Node *root = NULL; lineNo=110; streamLI<<lineNo<<endl;
     BST bst; lineNo=111; streamLI<<lineNo<<endl;

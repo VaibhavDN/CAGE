@@ -8,13 +8,14 @@ class FileOperations{
 
     public:
     void setDataFromFile(string file_name){
+        dataToTokenize = "";
         try{
             ifstream stream;
             stream.exceptions(ifstream::failbit);
             stream.open(file_name);
             while(!stream.eof()){
                 getline(stream, line);
-             dataToTokenize+=line+"\n";
+                dataToTokenize+=line+"\n";
             }
             stream.close();
         }catch(exception e){
@@ -61,6 +62,7 @@ class Splitter : public FileOperations{
     private:
     set<char> delimiter = {' ', ',', '(', ')', '{', '}', ';', '<', '>', '*', ':', '!', '=', '.', '\"', '\'', '/'};
     vector<vector<string> >splitLines;
+    Trie trie_code_analyzer;
 
     public:
     void runSplitter(){
@@ -102,19 +104,22 @@ class Splitter : public FileOperations{
         return splitLines;
     }
 
+    void insert_code_analyzer(string word, int key_word_type){
+        trie_code_analyzer.insertInTrie(word, key_word_type);
+    }
+
     void generateIntermediateLanguage(){
-        Trie trie;
         Key_word_category key_word_category;
         vector<vector<string> > newSplitLines;
         for(int counter=0; counter<splitLines.size(); counter++){
             vector<string> new_word_vector; 
             for(int innerCounter=0; innerCounter<splitLines.at(counter).size(); innerCounter++){
                 string word_in_vec = splitLines.at(counter).at(innerCounter);
-                int key = trie.searchInTrie(word_in_vec);
+                int key = trie_code_analyzer.searchInTrie(word_in_vec);
                 if(key != -1){
                     string category = key_word_category.getCategory(key);
                     new_word_vector.emplace_back(category);
-                    cout<<"\'"<<category<<"\', ";
+                    cout<<"\""<<category<<"\", ";
                 }
                 else{
                     new_word_vector.emplace_back(word_in_vec);
@@ -127,7 +132,6 @@ class Splitter : public FileOperations{
         }
 
         setIntermediate_lang_vector(newSplitLines);
-        write_intermediate_lang();
     }
 
     void viewSplitLines(){
@@ -140,11 +144,11 @@ class Splitter : public FileOperations{
     }
 };
 
-int mainParser(){
-    Splitter splitter;
+int mainParser(Splitter splitter){
     splitter.setDataFromFile("usersCode.cpp");
     splitter.runSplitter();
     splitter.viewSplitLines();
     splitter.generateIntermediateLanguage();
+    splitter.write_intermediate_lang();
     return 0;
 }

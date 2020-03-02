@@ -49,7 +49,16 @@ class LineInserter{
             splitter.viewSplitLines();
             splitter.generateIntermediateLanguage();
             vector<vector<string> > tokenizedLine = splitter.getIntermediate_lang_vector();
-            if(tokenizedLine[0][0] == "primaryDT" && functionOpen == 0){
+            if(tokenizedLine[0][0] == "abstractDT" && tokenizedLine[0].size() > 1){
+                cout<<"\n\n|"<<tokenizedLine[0][1]<<"|\n"<<endl;                
+                splitter.insert_code_analyzer(tokenizedLine[0][1], 12);
+                splitter.generateIntermediateLanguage();
+                tokenizedLine = splitter.getIntermediate_lang_vector();
+                cout<<"\n\n|"<<tokenizedLine[0][1]<<"|\n"<<endl;
+                //exit(1);
+            }
+
+            if(functionOpen == 0){
                 for(int counter=0; counter<tokenizedLine[0].size(); counter++){
                     if(tokenizedLine[0][counter] == "("){
                         paranOpen = 1;
@@ -158,7 +167,8 @@ class LineInserter{
         stream_write.open("usersFlow.cpp", ios_base::out);
         stream_write<<dataToWrite;
         stream_write.close();
-        mainParser();
+
+        mainParser(splitter);   //! Just to generate complete Int_lang.cage for analysis and nothing else.
         return 0;
     }
 

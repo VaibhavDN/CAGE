@@ -21,7 +21,8 @@ class Key_word_category{
                                 {8, "loop"},
                                 {9, "datastructure"},
                                 {10, "preprocessor"},
-                                {11, "other_keyword"}};
+                                {11, "other_keyword"},
+                                {12, "abstractDTName"}};
 
     map<int, string>::iterator itr;
 
@@ -105,6 +106,18 @@ class Trie{
     }
 
     void insertInTrie(string word, int key_word_type){
+        //! This makes c++ case insensitive. Fix needed soon. Fix in search too.
+        string toLowerCase = "";
+        for(int counter=0; counter<word.length(); counter++){
+            if(word[counter] >= 65 && word[counter] <=90){
+                toLowerCase+=word[counter]+32;
+            }
+            else{
+                toLowerCase+=word[counter];
+            }
+        }
+        word = toLowerCase;
+
         if(head == NULL){
             head = createNode();
         }
@@ -116,7 +129,7 @@ class Trie{
                 index = 26;
             }
             else if(index<0 || index>25){
-                cout<<"index <0 or >25"<<endl;
+                cout<<"index <0 or >25 : "<<static_cast<char>(index+97)<<endl;
                 continue;
             }
 
@@ -141,6 +154,18 @@ class Trie{
     }
 
     int searchInTrie(string wordToSearch){
+        //! This makes c++ case insensitive. Fix needed soon. Fix in insert too.
+        string toLowerCase = "";
+        for(int counter=0; counter<wordToSearch.length(); counter++){
+            if(wordToSearch[counter] >= 65 && wordToSearch[counter] <=90){
+                toLowerCase+=wordToSearch[counter]+32;
+            }
+            else{
+                toLowerCase+=wordToSearch[counter];
+            }
+        }
+        wordToSearch = toLowerCase;
+
         childPointer = head;
         for(int counter=0; counter<wordToSearch.length(); counter++){
             int index = wordToSearch[counter] - 'a';
