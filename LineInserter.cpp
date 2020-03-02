@@ -49,7 +49,7 @@ class LineInserter{
             splitter.viewSplitLines();
             splitter.generateIntermediateLanguage();
             vector<vector<string> > tokenizedLine = splitter.getIntermediate_lang_vector();
-            if(tokenizedLine[0][0] == "abstractDT" && tokenizedLine[0].size() > 1){
+            if(tokenizedLine[0][0] == "userDefinedDT" && tokenizedLine[0].size() > 1){
                 cout<<"\n\n|"<<tokenizedLine[0][1]<<"|\n"<<endl;                
                 splitter.insert_code_analyzer(tokenizedLine[0][1], 12);
                 splitter.generateIntermediateLanguage();

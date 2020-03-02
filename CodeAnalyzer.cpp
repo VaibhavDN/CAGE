@@ -12,7 +12,7 @@ class Key_word_category{
     private:
     map<int, string> category = {{0, "primaryDT"}, 
                                 {1, "derivedDT"}, 
-                                {2, "abstractDT"}, 
+                                {2, "userDefinedDT"}, 
                                 {3, "conditional"},
                                 {4, "exception"},
                                 {5, "break_cont"},
@@ -22,7 +22,7 @@ class Key_word_category{
                                 {9, "datastructure"},
                                 {10, "preprocessor"},
                                 {11, "other_keyword"},
-                                {12, "abstractDTName"}};
+                                {12, "userDefinedDTName"}};
 
     map<int, string>::iterator itr;
 

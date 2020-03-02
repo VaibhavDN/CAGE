@@ -3,29 +3,29 @@ preprocessor < derivedDT >
 preprocessor < datastructure > 
 other_keyword other_keyword std ; 
 
-abstractDT Node { 
+userDefinedDT userDefinedDTName { 
 other_keyword : 
 derivedDT < pair < derivedDT , primaryDT > > variable_records ; 
-Node * leftPtr = NULL , * rightPtr = NULL ; 
+userDefinedDTName * leftPtr = other_keyword , * rightPtr = other_keyword ; 
 
 other_keyword : 
-Node ( derivedDT dataType , primaryDT lineNumber ) { 
+userDefinedDTName ( derivedDT dataType , primaryDT lineNumber ) { 
 variable_records . emplace_back ( make_pair ( dataType , lineNumber ) ) ; 
 } 
 
-primaryDT setRightPtr ( Node * ptrReceived ) { 
+primaryDT setRightPtr ( userDefinedDTName * ptrReceived ) { 
 rightPtr = ptrReceived ; 
 } 
 
-primaryDT setLeftPtr ( Node * ptrReceived ) { 
+primaryDT setLeftPtr ( userDefinedDTName * ptrReceived ) { 
 leftPtr = ptrReceived ; 
 } 
 
-Node * getRightPtr ( ) { 
+userDefinedDTName * getRightPtr ( ) { 
 return_exit rightPtr ; 
 } 
 
-Node * getLeftPtr ( ) { 
+userDefinedDTName * getLeftPtr ( ) { 
 return_exit leftPtr ; 
 } 
 
@@ -34,15 +34,15 @@ return_exit variable_records ;
 } 
 } ; 
 
-abstractDT BST { 
+userDefinedDT userDefinedDTName { 
 other_keyword : 
-Node * createNewNode ( derivedDT dataType , primaryDT lineNumber ) { 
-return_exit new_delete Node ( dataType , lineNumber ) ; 
+userDefinedDTName * createNewNode ( derivedDT dataType , primaryDT lineNumber ) { 
+return_exit new_delete userDefinedDTName ( dataType , lineNumber ) ; 
 } 
 
 other_keyword : 
-Node * insert ( Node * root , derivedDT dataType , primaryDT lineNumber ) { 
-conditional ( root = = NULL ) { 
+userDefinedDTName * insert ( userDefinedDTName * root , derivedDT dataType , primaryDT lineNumber ) { 
+conditional ( root = = other_keyword ) { 
 root = createNewNode ( dataType , lineNumber ) ; 
 } 
 conditional conditional ( root- > getData ( ) . at ( 0 ) . second < = lineNumber ) { 
@@ -56,44 +56,44 @@ return_exit root ;
 } 
 
 / / * BFS 
-primaryDT displayData ( Node * root ) { 
-conditional ( root = = NULL ) { 
+primaryDT displayData ( userDefinedDTName * root ) { 
+conditional ( root = = other_keyword ) { 
 return_exit ; 
 } 
 
 derivedDT < pair < derivedDT , primaryDT > > varInfo ; 
-datastructure < Node * > breadth_first ; 
+datastructure < userDefinedDTName * > breadth_first ; 
 
 breadth_first . emplace ( root ) ; 
-Node * changeLine = NULL ; 
+userDefinedDTName * changeLine = other_keyword ; 
 breadth_first . emplace ( changeLine ) ; 
 
 loop ( ! breadth_first . empty ( ) ) { 
 / * 
 * Inserting 5 2 8 1 3 7 9 in datastructure 
-* 5 NULL 
-* NULL 2 8 
-* 2 8 NULL 
-* 8 NULL 1 3 
-* NULL 1 3 7 9 
-* 1 3 7 9 NULL 
+* 5 other_keyword 
+* other_keyword 2 8 
+* 2 8 other_keyword 
+* 8 other_keyword 1 3 
+* other_keyword 1 3 7 9 
+* 1 3 7 9 other_keyword 
 * so on . . . . 
-* Using NULL loop line change . 
-* When NULL is encountered all children nodes are already in the datastructure so 
-* pop NULL other_keyword insert NULL at the back at the same time . 
+* other_keyword other_keyword loop line change . 
+* When other_keyword is encountered all children nodes are already in the datastructure so 
+* pop other_keyword other_keyword insert other_keyword at the back at the same time . 
 * / 
-conditional ( breadth_first . front ( ) = = NULL ) { 
+conditional ( breadth_first . front ( ) = = other_keyword ) { 
 other_keyword < < " \n " ; 
 breadth_first . pop ( ) ; 
 breadth_first . emplace ( changeLine ) ; 
 } 
 
-conditional ( breadth_first . front ( ) ! = NULL ) { 
-conditional ( breadth_first . front ( ) - > getLeftPtr ( ) ! = NULL ) { 
+conditional ( breadth_first . front ( ) ! = other_keyword ) { 
+conditional ( breadth_first . front ( ) - > getLeftPtr ( ) ! = other_keyword ) { 
 breadth_first . emplace ( breadth_first . front ( ) - > getLeftPtr ( ) ) ; 
 } 
 
-conditional ( breadth_first . front ( ) - > getRightPtr ( ) ! = NULL ) { 
+conditional ( breadth_first . front ( ) - > getRightPtr ( ) ! = other_keyword ) { 
 breadth_first . emplace ( breadth_first . front ( ) - > getRightPtr ( ) ) ; 
 } 
 
@@ -107,15 +107,15 @@ breadth_first . pop ( ) ;
 } ; 
 
 primaryDT main ( ) { 
-Node * root = NULL ; 
-BST bst ; 
-root = bst . insert ( root , " primaryDT " , 5 ) ; 
-root = bst . insert ( root , " primaryDT " , 8 ) ; 
-root = bst . insert ( root , " derivedDT " , 2 ) ; 
-root = bst . insert ( root , " primaryDT " , 1 ) ; 
-root = bst . insert ( root , " derivedDT " , 3 ) ; 
-root = bst . insert ( root , " primaryDT " , 7 ) ; 
-root = bst . insert ( root , " primaryDT " , 9 ) ; 
-bst . displayData ( root ) ; 
+userDefinedDTName * root = other_keyword ; 
+userDefinedDTName userDefinedDTName ; 
+root = userDefinedDTName . insert ( root , " primaryDT " , 5 ) ; 
+root = userDefinedDTName . insert ( root , " primaryDT " , 8 ) ; 
+root = userDefinedDTName . insert ( root , " derivedDT " , 2 ) ; 
+root = userDefinedDTName . insert ( root , " primaryDT " , 1 ) ; 
+root = userDefinedDTName . insert ( root , " derivedDT " , 3 ) ; 
+root = userDefinedDTName . insert ( root , " primaryDT " , 7 ) ; 
+root = userDefinedDTName . insert ( root , " primaryDT " , 9 ) ; 
+userDefinedDTName . displayData ( root ) ; 
 return_exit 0 ; 
 } 
