@@ -91,3 +91,13 @@ VisualizeFlow: Added code block visualization functionality
 Changes to LineInserter to help Visualizer
 
 ***
+
+Vaibhav:
+
+March 3, 2020
+
+Changes to all files: Now all the blocks of code can be identified.
+
+User defined names for abstract datatypes are added as keywords to trie.
+
+***
