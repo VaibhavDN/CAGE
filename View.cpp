@@ -43,6 +43,7 @@ class user_canvas : protected editorspace
 	size_t char_pos = 0;
 	char trigger_flag = 'y';
 	string str1;
+	
 	public:
 	user_canvas(int szx1, int szy1)
 	{
@@ -65,7 +66,6 @@ class user_canvas : protected editorspace
 		cur1.setPosition(sf::Vector2f(5,45));
 		cur1.setSize(sf::Vector2f(15,25));
 
-
 	}
 
 	void append_entry(char a)
@@ -73,7 +73,8 @@ class user_canvas : protected editorspace
 		str1.insert(str1.begin() + cur_pos, a);
 		text1.setString(str1);
 		++cur_pos;
-		cout<<str1[cur_pos]<<"\n";
+		
+		//cout<<cur_pos<<" "<<str1.length() - 1<<" "<< a <<"\n";
 	}
 
 	void back_sp()
@@ -190,9 +191,10 @@ class aux : protected editorspace
 				}
 				else if(e1.type == sf::Event::KeyPressed)
 				{
-					if(e1.key.code == sf::Keyboard::Return)
+					if(e1.key.code == sf::Keyboard::Enter)
 					{
 						u1->append_entry('\n');
+						//cout << "chala\n";
 
 					}
 					else if(e1.key.code == sf::Keyboard::BackSpace)
@@ -210,8 +212,9 @@ class aux : protected editorspace
 				}
 				else if(e1.type == sf::Event::TextEntered)
 				{
-					if (e1.text.unicode != 8)
+					if (e1.text.unicode != 8 && e1.text.unicode !=13)
 					u1->append_entry((char)e1.text.unicode);
+					//cout << "chala\n";
 				}
 			}
 		}	
