@@ -8,7 +8,7 @@ class LineInserter{
     set<char> lineToIgnoreIfCharPresent = {'}', ':'};
     stack<int> curlyBrackets;
     stack<string> block_line_stack;
-    int lineNo = 0, initialized = 0, paranOpen = 0;
+    int lineNo = 0, initialized = 0, paranOpen = 0, node_counter = 0;
     int paranClose = 0, functionOpen = 0, skip = 0, funStartNotifier = 0, level = -1;   //level of how deep is block inside other blocks
     string line, dataToWrite = "";
     vector<string> block_first_line;
@@ -29,7 +29,7 @@ class LineInserter{
     int mainLineInserter(){
         Splitter splitter;
 
-        ofstream streamLIFun("flowNode.txt");
+        ofstream streamLIBlock("flowNode.txt");
         ifstream stream;
         stream.open("usersCode.cpp");
         while(!stream.eof()){
@@ -73,6 +73,7 @@ class LineInserter{
                         paranClose = 0;
                         dataToWrite+="/*fun=1*/";
                         level++;
+                        node_counter++;
                         continue;
                     }
                     else if(tokenizedLine[0][counter] == "}" && functionOpen == 1){ //For inline functions
@@ -89,6 +90,7 @@ class LineInserter{
                     paranOpen = 0;
                     paranClose = 0;
                     level++;
+                    node_counter++;
                 }
                 else{
                     paranOpen = 0;
@@ -100,12 +102,13 @@ class LineInserter{
                             dataToWrite+="/*push->*/";
                             level++;
                             block_line_stack.push(line);
+                            node_counter++;
                         }
                         else if(tokenizedLine[0][counter] == "}"){
                             if(curlyBrackets.size() > 1){
                                 int top = curlyBrackets.top();
                                 curlyBrackets.pop();
-                                streamLIFun<<top<<" "<<lineNo<<" "<<level<<endl;
+                                streamLIBlock<<top<<" "<<lineNo<<" "<<level<<endl;
                                 string top_line = block_line_stack.top();
                                 block_line_stack.pop();
                                 insert_block_first_line(top_line);
@@ -119,7 +122,7 @@ class LineInserter{
                                 if(functionOpen == 1){
                                     int top = curlyBrackets.top();
                                     curlyBrackets.pop();
-                                    streamLIFun<<top<<" "<<lineNo<<" "<<level<<endl;
+                                    streamLIBlock<<top<<" "<<lineNo<<" "<<level<<endl;
                                     string top_line = block_line_stack.top();
                                     block_line_stack.pop();
                                     insert_block_first_line(top_line);
@@ -145,7 +148,7 @@ class LineInserter{
                     funStartNotifier = 0;
                     curlyBrackets.push(lineNo);
                     block_line_stack.push(line);
-                    //streamLIFun<<lineNo<<" ";
+                    //streamLIBlock<<lineNo<<" ";
                 }
             }
             else{
@@ -161,7 +164,12 @@ class LineInserter{
             }
         }
         stream.close();
-        streamLIFun.close();
+        streamLIBlock.close();
+
+        ofstream nodeCountStream;
+        nodeCountStream.open("NodeCount.txt");
+        nodeCountStream<<node_counter<<endl;
+        nodeCountStream.close();
 
         ofstream stream_write;
         stream_write.open("usersFlow.cpp", ios_base::out);
@@ -169,6 +177,8 @@ class LineInserter{
         stream_write.close();
 
         mainParser(splitter);   //! Just to generate complete Int_lang.cage for analysis and nothing else.
+        system("clang++ usersFlow.cpp -o usersFlow");
+        system("./usersFlow");
         return 0;
     }
 

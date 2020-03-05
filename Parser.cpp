@@ -11,7 +11,7 @@ class FileOperations{
         dataToTokenize = "";
         try{
             ifstream stream;
-            stream.exceptions(ifstream::failbit);
+            //stream.exceptions(ifstream::failbit);
             stream.open(file_name);
             while(!stream.eof()){
                 getline(stream, line);
@@ -20,6 +20,7 @@ class FileOperations{
             stream.close();
         }catch(exception e){
             cout<<"Exception while opening usersCode: "<<e.what()<<endl;
+            exit(1);
         }
     }
 

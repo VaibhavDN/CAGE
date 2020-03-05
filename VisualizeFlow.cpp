@@ -8,7 +8,7 @@
 using namespace std;
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode(1200, 600), "Control Flow");
+    sf::RenderWindow window(sf::VideoMode(1200, 768), "Control Flow");
     window.setVerticalSyncEnabled(true);
 
     LineInserter lineInserter;
@@ -28,38 +28,69 @@ int main(){
     sf::CircleShape functions;
     functions.setTextureRect(sf::IntRect(130,130,730,730));
     functions.setTexture(&texture);
-    functions.setRadius(20);
+    functions.setRadius(8);
     functions.setOrigin(sf::Vector2f(functions.getRadius(), functions.getRadius()));
     //functions.setFillColor(sf::Color(255,0,0,200));
     map<int, sf::CircleShape> display_node;
 
+    ifstream nodeCountStream("NodeCount.txt");
+    int node_count;
+    nodeCountStream>>node_count;
+    nodeCountStream.close();
+
     map<int, int> fun_map;
     vector<int> depthwise_x, depthwise_y;
-    int fun_start, fun_end, X=0, Y=-50, level=0, level_prev=0, depth=0;
+    int fun_start, fun_end, X=-220, Y=40, level=0, level_prev=0, bfl_counter = 0, depth = 0, insert_count_y=0, max_depth = 0;
     depthwise_x.emplace_back(X);
     depthwise_y.emplace_back(Y);
     ifstream streamNode, streamFlow;
     streamNode.open("flowNode.txt");
+
+    vector < vector < tuple < int, int, int > > > reorder1, reorder2;
+    vector < tuple < int, int, int, string > > entry1, entry2;
+
+    for(int counter=0; counter<node_count; counter++){
+        depthwise_y.emplace_back(Y);
+        Y+=50;
+        depthwise_x.emplace_back(-220);
+    }
+
     while(!streamNode.eof()){
+        try{
+
         streamNode>>fun_start>>fun_end>>level;
-        if(level == 0){
-            Y=depthwise_y.back();
-            Y+=80;
-            depthwise_y.emplace_back(Y);
-            depth++;
+        cout<<"\nfun_start: "<<fun_start<<" fun_end: "<<fun_end<<" level: "<<level<<endl;
+        //entry1.emplace_back(make_tuple(fun_start, fun_end, level, block_first_line[bfl_counter]));
+        //bfl_counter++;
+
+        //! WIP
+        
+        cout<<"Debug depth: "<<depth<<" X: "<<X<<" Y: "<<Y<<" depthwise_y.size(): "<<depthwise_y.size()<<" level: "<<level<<" level_prev: "<<level_prev<<endl;
+        if(depth < 0){
+            cout<<"Error: Depth < 0 |VisualizerFlow|"<<endl;
+            Y-=50;
             X=80;
-            depthwise_x.emplace_back(X);
+            depth = 0;
+        }
+        else if(level == 0){
+            cout<<"level 0"<<endl;
+            depth = max_depth;
+            depth++;
+            Y=depthwise_y[depth];
+            X=depthwise_x[depth]+300;
+            depthwise_x[depth]=X;
+            cout<<"Increasing -> New depth: "<<depth<<endl;
         }
         else if(level > level_prev){
-            Y=depthwise_y[depth];
-            Y+=80;
-            depthwise_y.emplace_back(Y);
             depth++;
-            X=80;
-            depthwise_x.emplace_back(X);
+            Y=depthwise_y[depth];
+            cout<<"Depth: "<<depth<<endl;
+            X=depthwise_x[depth]+300;
+            depthwise_x[depth] = X;
         }
         else if(level < level_prev){
-            depth--;
+            depth-= 1;
+            cout<<"Decreasing -> New depth: "<<depth<<endl;
             Y=depthwise_y[depth];
             X=depthwise_x[depth]+300;
             depthwise_x[depth] = X;
@@ -69,6 +100,11 @@ int main(){
             depthwise_x[depth] = X;
         }
         level_prev = level;
+        
+        if(depth>max_depth){
+            max_depth = depth;
+        }
+
         fun_map.insert(pair<int, int>(fun_start, fun_end));
         functions.setPosition(sf::Vector2f(X, Y));
         display_node.insert(pair<int, sf::CircleShape>(fun_start, functions));
@@ -78,14 +114,19 @@ int main(){
             cout<<block_first_line.back()<<endl;
             text.setFillColor(sf::Color::Black);
             text.setCharacterSize(12);
-            text.setPosition(sf::Vector2f(functions.getPosition().x - 20, functions.getPosition().y + 30));
+            text.setPosition(sf::Vector2f(functions.getPosition().x - 20, functions.getPosition().y + 15));
             fun_name.emplace_back(text);
             block_first_line.pop_back();
         }
         
+        //! WIP ends here
+        }
+        catch(exception e){
+            cout<<e.what()<<endl;
+        }
     }
     streamNode.close();
-
+    
     vector<int> flow;
     int lineNo;
     streamFlow.open("flowOutput.txt");
@@ -114,9 +155,9 @@ int main(){
             }
             lower_bound = itr->first;
             cout<<"lineNo: "<<flow.at(lineItr)<<" lower_bound: "<<lower_bound<<endl;
-            display_node.at(lower_bound).setFillColor(sf::Color(255, 217, 179));
+            display_node.at(lower_bound).setFillColor(sf::Color(255, 200, 100));
             lineItr++;
-            sleep(1);
+            usleep(800000);
         }
         else{
             display_node.at(lower_bound).setFillColor(sf::Color::Red);

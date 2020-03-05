@@ -41,7 +41,7 @@ class TrieNode{
 
     public:
     TrieNode(){
-        //Initialize all 26 children as NULL
+        //Initialize all 27 children as NULL
         for(int counter=0; counter<NO_OF_CHARACTERS; counter++){
             childAlphabet[counter] = NULL;
         }
