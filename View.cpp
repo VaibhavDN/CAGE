@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <unistd.h>
 #include <thread>
+#include "compile.cpp"
 
 using namespace std;
 
@@ -42,9 +43,10 @@ class user_canvas : protected editorspace
 	size_t cur_pos = 0;
 	size_t char_pos = 0;
 	char trigger_flag = 'y';
-	string str1;
+	
 	
 	public:
+	string str1;
 	user_canvas(int szx1, int szy1)
 	{
 		szx = szx1;
@@ -71,6 +73,11 @@ class user_canvas : protected editorspace
 	void append_entry(char a)
 	{
 		str1.insert(str1.begin() + cur_pos, a);
+		if(cur1.getPosition().x > szx*0.9)
+		{
+			str1.insert(str1.begin() + cur_pos, '\n'); //line wrap functionality
+			++cur_pos;
+		}
 		text1.setString(str1);
 		++cur_pos;
 		
@@ -152,6 +159,8 @@ class toolbar : protected editorspace
 class aux : protected editorspace
 {
 	sf::RectangleShape vertscroll;
+	int kflag1 = 0;
+	compile c1;
 
 	public:
 	aux()
@@ -161,7 +170,6 @@ class aux : protected editorspace
 
 		vertscroll.setPosition(sf::Vector2f(szx-10, 40));
 		vertscroll.setSize(sf::Vector2f(10, szy-60));
-
 	}
 
 
@@ -177,7 +185,7 @@ class aux : protected editorspace
 	}
 
 	public:
-	void routine(user_canvas *u1)
+	void routine(user_canvas *u1, topbar *t1)
 	{
 		
 		sf::Event e1;
@@ -209,10 +217,29 @@ class aux : protected editorspace
 					{
 						u1->shift_cursor('r');
 					}
+					else if(e1.key.code == sf::Keyboard::LAlt)
+					{
+						kflag1 = 1;
+					}
+					else if(e1.key.code == sf::Keyboard::S && kflag1 == 1)
+					{
+						c1.save(u1->str1);
+					}
+					else if(e1.key.code == sf::Keyboard::C && kflag1 == 1)
+					{
+						c1.comp();
+					}
+				}
+				else if(e1.type == sf::Event::KeyReleased)
+				{
+					if(e1.key.code == sf::Keyboard::LAlt)
+					{
+						kflag1 = 0;
+					}
 				}
 				else if(e1.type == sf::Event::TextEntered)
 				{
-					if (e1.text.unicode != 8 && e1.text.unicode !=13)
+					if (e1.text.unicode != 8 && e1.text.unicode !=13 && kflag1 == 0)
 					u1->append_entry((char)e1.text.unicode);
 					//cout << "chala\n";
 				}
@@ -247,7 +274,7 @@ int main(int argc, char* argv[])
 	topbar to1;
 	toolbar tb1;
 	aux a1;
-	thread t1(&aux::routine, &a1, &u1);
+	thread t1(&aux::routine, &a1, &u1, &to1);
 	a1.draw(&u1);
 	t1.join();
 }
