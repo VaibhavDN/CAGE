@@ -1,121 +1,35 @@
 preprocessor < iostream > 
-preprocessor < derivedDT > 
-preprocessor < datastructure > 
 other_keyword other_keyword std ; 
 
-userDefinedDT userDefinedDTName { 
-other_keyword : 
-derivedDT < pair < derivedDT , primaryDT > > variable_records ; 
-userDefinedDTName * leftPtr = other_keyword , * rightPtr = other_keyword ; 
-
-other_keyword : 
-userDefinedDTName ( derivedDT dataType , primaryDT lineNumber ) { 
-variable_records . emplace_back ( make_pair ( dataType , lineNumber ) ) ; 
-} 
-
-primaryDT setRightPtr ( userDefinedDTName * ptrReceived ) { 
-rightPtr = ptrReceived ; 
-} 
-
-primaryDT setLeftPtr ( userDefinedDTName * ptrReceived ) { 
-leftPtr = ptrReceived ; 
-} 
-
-userDefinedDTName * getRightPtr ( ) { 
-return_exit rightPtr ; 
-} 
-
-userDefinedDTName * getLeftPtr ( ) { 
-return_exit leftPtr ; 
-} 
-
-derivedDT < pair < derivedDT , primaryDT > > getData ( ) { 
-return_exit variable_records ; 
-} 
-} ; 
-
-userDefinedDT userDefinedDTName { 
-other_keyword : 
-userDefinedDTName * createNewNode ( derivedDT dataType , primaryDT lineNumber ) { 
-return_exit new_delete userDefinedDTName ( dataType , lineNumber ) ; 
-} 
-
-other_keyword : 
-userDefinedDTName * insert ( userDefinedDTName * root , derivedDT dataType , primaryDT lineNumber ) { 
-conditional ( root = = other_keyword ) { 
-root = createNewNode ( dataType , lineNumber ) ; 
-} 
-conditional conditional ( root- > getData ( ) . at ( 0 ) . second < = lineNumber ) { 
-root- > setRightPtr ( insert ( root- > getRightPtr ( ) , dataType , lineNumber ) ) ; 
-} 
-conditional { 
-root- > setLeftPtr ( insert ( root- > getLeftPtr ( ) , dataType , lineNumber ) ) ; 
-} 
-
-return_exit root ; 
-} 
-
-/ / * BFS 
-primaryDT displayData ( userDefinedDTName * root ) { 
-conditional ( root = = other_keyword ) { 
-return_exit ; 
-} 
-
-derivedDT < pair < derivedDT , primaryDT > > varInfo ; 
-datastructure < userDefinedDTName * > breadth_first ; 
-
-breadth_first . emplace ( root ) ; 
-userDefinedDTName * changeLine = other_keyword ; 
-breadth_first . emplace ( changeLine ) ; 
-
-loop ( ! breadth_first . empty ( ) ) { 
-/ * 
-* Inserting 5 2 8 1 3 7 9 in datastructure 
-* 5 other_keyword 
-* other_keyword 2 8 
-* 2 8 other_keyword 
-* 8 other_keyword 1 3 
-* other_keyword 1 3 7 9 
-* 1 3 7 9 other_keyword 
-* so on . . . . 
-* other_keyword other_keyword loop line change . 
-* When other_keyword is encountered all children nodes are already in the datastructure so 
-* pop other_keyword other_keyword insert other_keyword at the back at the same time . 
-* / 
-conditional ( breadth_first . front ( ) = = other_keyword ) { 
-other_keyword < < " \n " ; 
-breadth_first . pop ( ) ; 
-breadth_first . emplace ( changeLine ) ; 
-} 
-
-conditional ( breadth_first . front ( ) ! = other_keyword ) { 
-conditional ( breadth_first . front ( ) - > getLeftPtr ( ) ! = other_keyword ) { 
-breadth_first . emplace ( breadth_first . front ( ) - > getLeftPtr ( ) ) ; 
-} 
-
-conditional ( breadth_first . front ( ) - > getRightPtr ( ) ! = other_keyword ) { 
-breadth_first . emplace ( breadth_first . front ( ) - > getRightPtr ( ) ) ; 
-} 
-
-varInfo = breadth_first . front ( ) - > getData ( ) ; 
-other_keyword < < varInfo . at ( 0 ) . first < < " " < < varInfo . at ( 0 ) . second < < " " ; 
-} 
-
-breadth_first . pop ( ) ; 
+primaryDT fun_call ( ) { 
+loop ( primaryDT i = 0 ; i < 5 ; i++ ) { 
+primaryDT m = i ; 
+m+ = m ; 
 } 
 } 
-} ; 
 
 primaryDT main ( ) { 
-userDefinedDTName * root = other_keyword ; 
-userDefinedDTName userDefinedDTName ; 
-root = userDefinedDTName . insert ( root , " primaryDT " , 5 ) ; 
-root = userDefinedDTName . insert ( root , " primaryDT " , 8 ) ; 
-root = userDefinedDTName . insert ( root , " derivedDT " , 2 ) ; 
-root = userDefinedDTName . insert ( root , " primaryDT " , 1 ) ; 
-root = userDefinedDTName . insert ( root , " derivedDT " , 3 ) ; 
-root = userDefinedDTName . insert ( root , " primaryDT " , 7 ) ; 
-root = userDefinedDTName . insert ( root , " primaryDT " , 9 ) ; 
-userDefinedDTName . displayData ( root ) ; 
+primaryDT n = 5 ; 
+loop ( n-- ) { 
+conditional ( n > 2 ) { 
+conditional ( n < 10 ) { 
+loop ( primaryDT j = 0 ; j < n ; j++ ) { 
+primaryDT m = j ; 
+m = m%3 ; 
+} 
+} 
+conditional { 
+loop ( primaryDT k = 0 ; k < 2 * n ; k++ ) { 
+conditional ( k = = 5 ) { 
+primaryDT m = k ; 
+m * = m ; 
+} 
+} 
+} 
+} 
+conditional { 
+fun_call ( ) ; 
+} 
+} 
 return_exit 0 ; 
 } 

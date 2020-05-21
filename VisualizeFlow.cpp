@@ -1,26 +1,50 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <tuple>
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
 #include "LineInserter.cpp"
 
 using namespace std;
 
+bool sort_flowNode(tuple<int, int, int, sf::Text, sf::CircleShape> t1, tuple<int, int, int, sf::Text, sf::CircleShape> t2){
+    return get<0>(t1) < get<0>(t2);
+}
+
 int main(){
-    sf::RenderWindow window(sf::VideoMode(1200, 768), "Control Flow");
+    sf::RenderWindow window(sf::VideoMode(1366, 768), "Control Flow");
     window.setVerticalSyncEnabled(true);
+
+    sf::RectangleShape code_side;
+    code_side.setFillColor(sf::Color(26, 0, 51));
+    code_side.setPosition(sf::Vector2f(window.getSize().x/2, 0));
+    code_side.setSize(sf::Vector2f(window.getSize().x/2, window.getSize().y));
 
     LineInserter lineInserter;
     lineInserter.mainLineInserter();
     //exit(0);
     vector<string> block_first_line = lineInserter.getFunFirstLine();
     reverse(block_first_line.begin(), block_first_line.end());
+
+    map<int, string> user_code_linewise = lineInserter.get_user_code_linewise();
+
     vector<sf::Text> fun_name;
     sf::Text text;
     sf::Font font;
     font.loadFromFile("FiraSans-Book.otf");
     text.setFont(font);
+
+    int line_spacing=20, text_x=window.getSize().x/2, text_y=0;
+    map<int, sf::Text> user_code;
+    for(auto itr=user_code_linewise.begin(); itr != user_code_linewise.end(); itr++){
+        text.setFillColor(sf::Color::White);
+        text.setCharacterSize(14);
+        text.setString(itr->second);
+        text.setPosition(sf::Vector2f(text_x+(text_x/8), text_y+line_spacing));
+        user_code.insert(make_pair(itr->first, text));
+        text_y+=line_spacing;
+    }
 
     sf::Texture texture;
     texture.loadFromFile("pearl.jpg");
@@ -39,15 +63,13 @@ int main(){
     nodeCountStream.close();
 
     map<int, int> fun_map;
+    vector<tuple<int, int, int, sf::Text, sf::CircleShape> >flowNode;      //!New
     vector<int> depthwise_x, depthwise_y;
     int fun_start, fun_end, X=-220, Y=40, level=0, level_prev=0, bfl_counter = 0, depth = 0, insert_count_y=0, max_depth = 0;
     depthwise_x.emplace_back(X);
     depthwise_y.emplace_back(Y);
     ifstream streamNode, streamFlow;
     streamNode.open("flowNode.txt");
-
-    vector < vector < tuple < int, int, int > > > reorder1, reorder2;
-    vector < tuple < int, int, int, string > > entry1, entry2;
 
     for(int counter=0; counter<node_count; counter++){
         depthwise_y.emplace_back(Y);
@@ -57,75 +79,34 @@ int main(){
 
     while(!streamNode.eof()){
         try{
-
-        streamNode>>fun_start>>fun_end>>level;
-        cout<<"\nfun_start: "<<fun_start<<" fun_end: "<<fun_end<<" level: "<<level<<endl;
-        //entry1.emplace_back(make_tuple(fun_start, fun_end, level, block_first_line[bfl_counter]));
-        //bfl_counter++;
-
-        //! WIP
-        
-        cout<<"Debug depth: "<<depth<<" X: "<<X<<" Y: "<<Y<<" depthwise_y.size(): "<<depthwise_y.size()<<" level: "<<level<<" level_prev: "<<level_prev<<endl;
-        if(depth < 0){
-            cout<<"Error: Depth < 0 |VisualizerFlow|"<<endl;
-            Y-=50;
-            X=80;
-            depth = 0;
-        }
-        else if(level == 0){
-            cout<<"level 0"<<endl;
-            depth = max_depth;
-            depth++;
-            Y=depthwise_y[depth];
-            X=depthwise_x[depth]+300;
-            depthwise_x[depth]=X;
-            cout<<"Increasing -> New depth: "<<depth<<endl;
-        }
-        else if(level > level_prev){
-            depth++;
-            Y=depthwise_y[depth];
-            cout<<"Depth: "<<depth<<endl;
-            X=depthwise_x[depth]+300;
-            depthwise_x[depth] = X;
-        }
-        else if(level < level_prev){
-            depth-= 1;
-            cout<<"Decreasing -> New depth: "<<depth<<endl;
-            Y=depthwise_y[depth];
-            X=depthwise_x[depth]+300;
-            depthwise_x[depth] = X;
-        }
-        else{
-            X=depthwise_x[depth]+300;
-            depthwise_x[depth] = X;
-        }
-        level_prev = level;
-        
-        if(depth>max_depth){
-            max_depth = depth;
-        }
-
-        fun_map.insert(pair<int, int>(fun_start, fun_end));
-        functions.setPosition(sf::Vector2f(X, Y));
-        display_node.insert(pair<int, sf::CircleShape>(fun_start, functions));
-
-        if(block_first_line.size() > 0){
-            text.setString(block_first_line.back());
-            cout<<block_first_line.back()<<endl;
+            streamNode>>fun_start>>fun_end>>level;
+            fun_map.insert(make_pair(fun_start, level));
+            cout<<"\nfun_start: "<<fun_start<<" fun_end: "<<fun_end<<" level: "<<level<<endl;
+            
+            cout<<"Debug depth: "<<depth<<" X: "<<X<<" Y: "<<Y<<" depthwise_y.size(): "<<depthwise_y.size()<<" level: "<<level<<" level_prev: "<<level_prev<<endl;
+            
             text.setFillColor(sf::Color::Black);
             text.setCharacterSize(12);
-            text.setPosition(sf::Vector2f(functions.getPosition().x - 20, functions.getPosition().y + 15));
-            fun_name.emplace_back(text);
-            block_first_line.pop_back();
-        }
-        
-        //! WIP ends here
+            if(block_first_line.size() > 0){
+                string str = block_first_line.back()+"\n"+to_string(fun_start)+" : "+to_string(fun_end)+" : "+to_string(level);
+                text.setString(str);
+                cout<<block_first_line.back()<<endl;
+                block_first_line.pop_back();
+                flowNode.push_back(make_tuple(level, fun_start, fun_end, text, functions));
+            }
+            else{
+                //!Control should not reach here
+                text.setString(to_string(fun_start) + " : " + to_string(fun_end));
+            }
+            
         }
         catch(exception e){
             cout<<e.what()<<endl;
         }
     }
     streamNode.close();
+
+    sort(flowNode.begin(), flowNode.end(), sort_flowNode);
     
     vector<int> flow;
     int lineNo;
@@ -137,6 +118,7 @@ int main(){
     streamFlow.close();
 
     int lineItr=0;
+    int lower_bound=0, selected_node=0;
     while(window.isOpen()){
         sf::Event event;
 
@@ -147,31 +129,71 @@ int main(){
             }
         }
 
-        int lower_bound;
-        if(lineItr<flow.size()){
-            map<int, int>::iterator itr = fun_map.lower_bound(flow.at(lineItr));
-            if(itr != fun_map.begin()){
-                itr--;
+        
+        sf::Color selected_node_color;
+        if(lineItr<flow.size()-1){
+            int smallest_range = INT16_MAX;
+            for(auto itr=flowNode.begin(); itr!=flowNode.end(); itr++){
+                if((flow.at(lineItr) >= get<1>(*itr)) && (flow.at(lineItr) <= get<2>(*itr))){
+                    if(get<2>(*itr)-get<1>(*itr) < smallest_range){
+                        lower_bound = get<1>(*itr);
+                        smallest_range = get<2>(*itr)-get<1>(*itr);
+                    }
+                }
             }
-            lower_bound = itr->first;
+            selected_node_color = sf::Color(255, 200, 100);
             cout<<"lineNo: "<<flow.at(lineItr)<<" lower_bound: "<<lower_bound<<endl;
-            display_node.at(lower_bound).setFillColor(sf::Color(255, 200, 100));
             lineItr++;
             usleep(800000);
         }
         else{
-            display_node.at(lower_bound).setFillColor(sf::Color::Red);
+            selected_node_color = sf::Color::Red;
         }
 
         window.clear(sf::Color::White);
-        int counter = 0;
-        for(map<int, int>::iterator itr=fun_map.begin(); itr!=fun_map.end(); itr++){
-            window.draw(display_node.at(itr->first));
-            window.draw(fun_name.at(counter));
-            counter++;
+        window.draw(code_side);
+
+        cout<<"flow.at(lineItr): "<<flow.at(lineItr)<<endl;
+        if(user_code.find(flow.at(lineItr)) != user_code.end()){
+            user_code.at(flow.at(lineItr)).setFillColor(sf::Color(255, 153, 153));
+            for(auto itr=user_code.begin(); itr != user_code.end(); itr++){
+                window.draw(itr->second);
+            }
+            user_code.at(flow.at(lineItr)).setFillColor(sf::Color::White);
         }
-        display_node.at(lower_bound).setFillColor(sf::Color::White);
+        cout<<"Code written on the screen\n";
+
+        int vertical_pos = 70, horizontal_pos = -150, level_prev = 0;
+        for(int index=0; index<flowNode.size(); index++){
+            level = get<0>(flowNode[index]);
+            cout<<"Level acquired\n";
+            if(level_prev == level){
+                horizontal_pos+=200;
+            }
+            else{
+                level_prev = level;
+                horizontal_pos = 50;
+                vertical_pos+=70;
+            }
+            cout<<"Calculated horizontal and vertical pos\n";
+
+            if(get<1>(flowNode[index]) == lower_bound){
+                get<4>(flowNode[index]).setFillColor(selected_node_color);
+                selected_node = index;
+            }
+
+            cout<<"Changed node color\n";
+
+            get<3>(flowNode[index]).setPosition(sf::Vector2f(horizontal_pos-10, vertical_pos+20));
+            get<4>(flowNode[index]).setPosition(sf::Vector2f(horizontal_pos, vertical_pos));
+            window.draw(get<3>(flowNode[index]));
+            window.draw(get<4>(flowNode[index]));
+
+            cout<<"Drawing complete!\n";
+            get<4>(flowNode[selected_node]).setFillColor(sf::Color::White);
+        }
         window.display();
+
     }
     return 0;
 }
