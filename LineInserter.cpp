@@ -12,6 +12,7 @@ class LineInserter{
     int paranClose = 0, functionOpen = 0, skip = 0, funStartNotifier = 0, level = -1;   //level of how deep is block inside other blocks
     string line, dataToWrite = "";
     vector<string> block_first_line;
+    map<int, string> user_code_linewise;
 
     public:
 
@@ -31,10 +32,11 @@ class LineInserter{
 
         ofstream streamLIBlock("flowNode.txt");
         ifstream stream;
-        stream.open("usersCode.cpp");
+        stream.open(USER_CODE);
         while(!stream.eof()){
             getline(stream, line);
             lineNo++;
+            user_code_linewise.insert(make_pair(lineNo, line));
             while (line[line.length()-1] == ' ' || line[line.length()-1] == '\t')
             {
                 line.pop_back();
@@ -177,12 +179,16 @@ class LineInserter{
         stream_write.close();
 
         mainParser(splitter);   //! Just to generate complete Int_lang.cage for analysis and nothing else.
-        system("clang++ usersFlow.cpp -o usersFlow");
+        system("g++ usersFlow.cpp -o usersFlow");
         system("./usersFlow");
         return 0;
     }
 
     vector<string> getFunFirstLine(){
         return block_first_line;
+    }
+
+    map<int, string> get_user_code_linewise(){
+        return user_code_linewise;
     }
 };

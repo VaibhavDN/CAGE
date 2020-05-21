@@ -1,4 +1,5 @@
 #include "CodeAnalyzer.cpp"
+#define USER_CODE "usersCode2.cpp"
 
 class FileOperations{
     private:
@@ -146,7 +147,7 @@ class Splitter : public FileOperations{
 };
 
 int mainParser(Splitter splitter){
-    splitter.setDataFromFile("usersCode.cpp");
+    splitter.setDataFromFile(USER_CODE);
     splitter.runSplitter();
     splitter.viewSplitLines();
     splitter.generateIntermediateLanguage();
