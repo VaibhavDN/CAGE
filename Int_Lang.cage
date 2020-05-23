@@ -2,14 +2,14 @@ preprocessor < iostream >
 other_keyword other_keyword std ; 
 
 primaryDT fun_call ( ) { 
-loop ( primaryDT i = 0 ; i < 5 ; i++ ) { 
+loop ( primaryDT i = 0 ; i < 2 ; i++ ) { 
 primaryDT m = i ; 
-m+ = m ; 
+other_keyword < < m < < other_keyword ; 
 } 
 } 
 
 primaryDT main ( ) { 
-primaryDT n = 5 ; 
+primaryDT n = 5 , array[5] ; 
 loop ( n-- ) { 
 conditional ( n > 2 ) { 
 conditional ( n < 10 ) { 
@@ -33,3 +33,4 @@ fun_call ( ) ;
 } 
 return_exit 0 ; 
 } 
+

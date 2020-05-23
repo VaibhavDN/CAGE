@@ -2,14 +2,14 @@
 using namespace std;
 
 void fun_call(){
-    for(int i=0; i<5; i++){
+    for(int i=0; i<2; i++){
         int m=i;
-        m+=m;
+        cout<<m<<endl;
     }
 }
 
 int main(){
-    int n = 5;
+    int n = 5, array[5];
     while(n--){
         if(n>2){
             if(n<10){

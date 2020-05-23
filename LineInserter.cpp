@@ -179,8 +179,15 @@ class LineInserter{
         stream_write.close();
 
         mainParser(splitter);   //! Just to generate complete Int_lang.cage for analysis and nothing else.
-        system("g++ usersFlow.cpp -o usersFlow");
-        system("./usersFlow");
+        try{
+            system("rm flowOutput.txt");
+            system("rm usersFlow");
+            system("g++ usersFlow.cpp -o usersFlow");
+            system("./usersFlow");
+        }
+        catch(exception &e){
+            cout<<e.what()<<endl;
+        }
         return 0;
     }
 

@@ -110,13 +110,18 @@ int main(){
     
     vector<int> flow;
     int lineNo;
-    streamFlow.open("flowOutput.txt");
-    while(!streamFlow.eof()){
-        streamFlow>>lineNo;
-        flow.emplace_back(lineNo);
+    try{
+        streamFlow.open("flowOutput.txt");
+        while(!streamFlow.eof()){
+            streamFlow>>lineNo;
+            flow.emplace_back(lineNo);
+        }
+        streamFlow.close();
     }
-    streamFlow.close();
-
+    catch(exception &e){
+        cout<<"VisualizeFlow exception flowOutput.txt missing\nCan be due to compilation error in users code: "<<e.what()<<endl;
+        exit(-1);
+    }
     int lineItr=0;
     int lower_bound=0, selected_node=0;
     while(window.isOpen()){

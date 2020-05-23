@@ -3,13 +3,13 @@ using namespace std; int lineNo=2;
 #include <fstream>
 ofstream streamLI("flowOutput.txt");
 /*fun=1*/void fun_call(){ lineNo=4; streamLI<<lineNo<<endl;
-/*push->*/    for(int i=0; i<5; i++){ lineNo=5; streamLI<<lineNo<<endl;
+/*push->*/    for(int i=0; i<2; i++){ lineNo=5; streamLI<<lineNo<<endl;
         int m=i; lineNo=6; streamLI<<lineNo<<endl;
-        m+=m; lineNo=7; streamLI<<lineNo<<endl;
+        cout<<m<<endl; lineNo=7; streamLI<<lineNo<<endl;
 /*pop->*/    }
 /*fun=0*/ /*|funEnd|*/ }
 /*fun=1*/int main(){ lineNo=11; streamLI<<lineNo<<endl;
-    int n = 5; lineNo=12; streamLI<<lineNo<<endl;
+    int n = 5, array[5]; lineNo=12; streamLI<<lineNo<<endl;
 /*push->*/    while(n--){ lineNo=13; streamLI<<lineNo<<endl;
 /*push->*/        if(n>2){ lineNo=14; streamLI<<lineNo<<endl;
 /*push->*/            if(n<10){ lineNo=15; streamLI<<lineNo<<endl;
