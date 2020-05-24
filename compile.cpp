@@ -18,6 +18,6 @@ class compile
 
     void comp()
     {
-        system("gnome-terminal -x sh -c 'g++ ts1.cpp -o ts1 ; ./ts1; echo Execution complete; read line'");
+        system("gnome-terminal -x sh -c 'g++ ts1.cpp -o ts1 ; ./ts1;echo ; echo ;echo Execution complete; echo press enter to exit; rm ts; read line'");
     }
 };

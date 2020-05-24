@@ -51,7 +51,7 @@ class user_canvas : protected editorspace
 	{
 		szx = szx1;
 		szy = szy1;
-		w1 = new sf::RenderWindow(sf::VideoMode(szx, szy), "CAGE");
+		w1 = new sf::RenderWindow(sf::VideoMode(szx, szy), "CAGE editor");
 		w1->setVerticalSyncEnabled(true);
 
 		font1.loadFromFile("DroidSansMono.ttf");
