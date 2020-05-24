@@ -1,104 +1,35 @@
 #include <iostream>
-#include <vector>
-#include <queue>
-using namespace std; int lineNo=4;
+using namespace std; int lineNo=2;
 #include <fstream>
 ofstream streamLI("flowOutput.txt");
-class Node{
-    private:
-    vector<pair<string, int> >variable_records;
-    Node *leftPtr = NULL, *rightPtr = NULL;
-    public:
-/*fun=1*/    Node(string dataType, int lineNumber){ lineNo=12; streamLI<<lineNo<<endl;
-        variable_records.emplace_back(make_pair(dataType, lineNumber)); lineNo=13; streamLI<<lineNo<<endl;
-/*fun=0*/ /*|funEnd|*/     }
-/*fun=1*/    void setRightPtr(Node *ptrReceived){ lineNo=16; streamLI<<lineNo<<endl;
-        rightPtr = ptrReceived; lineNo=17; streamLI<<lineNo<<endl;
-/*fun=0*/ /*|funEnd|*/     }
-/*fun=1*/    void setLeftPtr(Node *ptrReceived){ lineNo=20; streamLI<<lineNo<<endl;
-        leftPtr = ptrReceived; lineNo=21; streamLI<<lineNo<<endl;
-/*fun=0*/ /*|funEnd|*/     }
-/*fun=1*/    Node* getRightPtr(){ lineNo=24; streamLI<<lineNo<<endl;
-lineNo=25; streamLI<<lineNo<<endl;        return rightPtr;
-/*fun=0*/ /*|funEnd|*/     }
-/*fun=1*/    Node* getLeftPtr(){ lineNo=28; streamLI<<lineNo<<endl;
-lineNo=29; streamLI<<lineNo<<endl;        return leftPtr;
-/*fun=0*/ /*|funEnd|*/     }
-/*fun=1*/    vector<pair<string, int> > getData(){ lineNo=32; streamLI<<lineNo<<endl;
-lineNo=33; streamLI<<lineNo<<endl;        return variable_records;
-/*fun=0*/ /*|funEnd|*/     }
-};
-class BST{
-    private:
-/*fun=1*/    Node* createNewNode(string dataType, int lineNumber){ lineNo=39; streamLI<<lineNo<<endl;
-lineNo=40; streamLI<<lineNo<<endl;        return new Node(dataType, lineNumber);
-/*fun=0*/ /*|funEnd|*/     }
-    public:
-/*fun=1*/    Node* insert(Node *root, string dataType, int lineNumber){ lineNo=44; streamLI<<lineNo<<endl;
-/*push->*/        if(root == NULL){ lineNo=45; streamLI<<lineNo<<endl;
-            root = createNewNode(dataType, lineNumber); lineNo=46; streamLI<<lineNo<<endl;
-/*pop->*/        }
-/*push->*/        else if(root->getData().at(0).second <= lineNumber){ lineNo=48; streamLI<<lineNo<<endl;
-            root->setRightPtr(insert(root->getRightPtr(), dataType, lineNumber)); lineNo=49; streamLI<<lineNo<<endl;
-/*pop->*/        }
-/*push->*/        else{ lineNo=51; streamLI<<lineNo<<endl;
-            root->setLeftPtr(insert(root->getLeftPtr(), dataType, lineNumber)); lineNo=52; streamLI<<lineNo<<endl;
-/*pop->*/        }
-lineNo=55; streamLI<<lineNo<<endl;        return root;
-/*fun=0*/ /*|funEnd|*/     }
-    //* BFS
-/*fun=1*/    void displayData(Node *root){ lineNo=59; streamLI<<lineNo<<endl;
-/*push->*/        if(root == NULL){ lineNo=60; streamLI<<lineNo<<endl;
-lineNo=61; streamLI<<lineNo<<endl;            return;
-/*pop->*/        }
-        vector <pair<string, int> > varInfo; lineNo=64; streamLI<<lineNo<<endl;
-        queue <Node*> breadth_first; lineNo=65; streamLI<<lineNo<<endl;
-        breadth_first.emplace(root); lineNo=67; streamLI<<lineNo<<endl;
-        Node* changeLine = NULL; lineNo=68; streamLI<<lineNo<<endl;
-        breadth_first.emplace(changeLine); lineNo=69; streamLI<<lineNo<<endl;
-/*push->*/        while(!breadth_first.empty()){ lineNo=71; streamLI<<lineNo<<endl;
-            /* lineNo=72; streamLI<<lineNo<<endl;
-            * Inserting 5 2 8 1 3 7 9 in queue lineNo=73; streamLI<<lineNo<<endl;
-            * 5 NULL lineNo=74; streamLI<<lineNo<<endl;
-            * NULL 2 8 lineNo=75; streamLI<<lineNo<<endl;
-            * 2 8 NULL lineNo=76; streamLI<<lineNo<<endl;
-            * 8 NULL 1 3 lineNo=77; streamLI<<lineNo<<endl;
-            * NULL 1 3 7 9 lineNo=78; streamLI<<lineNo<<endl;
-            * 1 3 7 9 NULL lineNo=79; streamLI<<lineNo<<endl;
-            * so on.... lineNo=80; streamLI<<lineNo<<endl;
-            * Using NULL for line change. lineNo=81; streamLI<<lineNo<<endl;
-            * When NULL is encountered all children nodes are already in the queue so lineNo=82; streamLI<<lineNo<<endl;
-            * pop NULL and insert NULL at the back at the same time. lineNo=83; streamLI<<lineNo<<endl;
-            */ lineNo=84; streamLI<<lineNo<<endl;
-/*push->*/            if(breadth_first.front() == NULL){ lineNo=85; streamLI<<lineNo<<endl;
-                cout<<"\n"; lineNo=86; streamLI<<lineNo<<endl;
-                breadth_first.pop(); lineNo=87; streamLI<<lineNo<<endl;
-                breadth_first.emplace(changeLine); lineNo=88; streamLI<<lineNo<<endl;
-/*pop->*/            }
-/*push->*/            if(breadth_first.front() != NULL){ lineNo=91; streamLI<<lineNo<<endl;
-/*push->*/                if(breadth_first.front()->getLeftPtr() != NULL){ lineNo=92; streamLI<<lineNo<<endl;
-                breadth_first.emplace(breadth_first.front()->getLeftPtr()); lineNo=93; streamLI<<lineNo<<endl;
+/*fun=1*/void fun_call(){ lineNo=4; streamLI<<lineNo<<endl;
+/*push->*/    for(int i=0; i<2; i++){ lineNo=5; streamLI<<lineNo<<endl;
+        int m=i; lineNo=6; streamLI<<lineNo<<endl;
+        cout<<m<<endl; lineNo=7; streamLI<<lineNo<<endl;
+/*pop->*/    }
+/*fun=0*/ /*|funEnd|*/ }
+/*fun=1*/int main(){ lineNo=11; streamLI<<lineNo<<endl;
+    int n = 5, array[5]; lineNo=12; streamLI<<lineNo<<endl;
+/*push->*/    while(n--){ lineNo=13; streamLI<<lineNo<<endl;
+/*push->*/        if(n>2){ lineNo=14; streamLI<<lineNo<<endl;
+/*push->*/            if(n<10){ lineNo=15; streamLI<<lineNo<<endl;
+/*push->*/                for(int j=0; j<n; j++){ lineNo=16; streamLI<<lineNo<<endl;
+                    int m=j; lineNo=17; streamLI<<lineNo<<endl;
+                    m=m%3; lineNo=18; streamLI<<lineNo<<endl;
 /*pop->*/                }
-/*push->*/                if(breadth_first.front()->getRightPtr() != NULL){ lineNo=96; streamLI<<lineNo<<endl;
-                    breadth_first.emplace(breadth_first.front()->getRightPtr()); lineNo=97; streamLI<<lineNo<<endl;
-/*pop->*/                }
-                varInfo = breadth_first.front()->getData(); lineNo=100; streamLI<<lineNo<<endl;
-                cout<<varInfo.at(0).first<<" "<<varInfo.at(0).second<<" "; lineNo=101; streamLI<<lineNo<<endl;
 /*pop->*/            }
-            breadth_first.pop(); lineNo=104; streamLI<<lineNo<<endl;
+/*push->*/            else{ lineNo=21; streamLI<<lineNo<<endl;
+/*push->*/                for(int k=0; k<2*n; k++){ lineNo=22; streamLI<<lineNo<<endl;
+/*push->*/                    if(k == 5){ lineNo=23; streamLI<<lineNo<<endl;
+                        int m=k; lineNo=24; streamLI<<lineNo<<endl;
+                        m*=m; lineNo=25; streamLI<<lineNo<<endl;
+/*pop->*/                    }
+/*pop->*/                }
+/*pop->*/            }
 /*pop->*/        }
-/*fun=0*/ /*|funEnd|*/     }
-};
-/*fun=1*/int main(){ lineNo=109; streamLI<<lineNo<<endl;
-    Node *root = NULL; lineNo=110; streamLI<<lineNo<<endl;
-    BST bst; lineNo=111; streamLI<<lineNo<<endl;
-    root = bst.insert(root, "int", 5); lineNo=112; streamLI<<lineNo<<endl;
-    root = bst.insert(root, "float", 8); lineNo=113; streamLI<<lineNo<<endl;
-    root = bst.insert(root, "string", 2); lineNo=114; streamLI<<lineNo<<endl;
-    root = bst.insert(root, "float", 1); lineNo=115; streamLI<<lineNo<<endl;
-    root = bst.insert(root, "string", 3); lineNo=116; streamLI<<lineNo<<endl;
-    root = bst.insert(root, "int", 7); lineNo=117; streamLI<<lineNo<<endl;
-    root = bst.insert(root, "bool", 9); lineNo=118; streamLI<<lineNo<<endl;
-    bst.displayData(root); lineNo=119; streamLI<<lineNo<<endl;
-lineNo=120; streamLI<<lineNo<<endl;    return 0;
+/*push->*/        else{ lineNo=30; streamLI<<lineNo<<endl;
+            fun_call(); lineNo=31; streamLI<<lineNo<<endl;
+/*pop->*/        }
+/*pop->*/    }
+lineNo=34; streamLI<<lineNo<<endl;    return 0;
 /*fun=0*/ /*|funEnd|*/ }

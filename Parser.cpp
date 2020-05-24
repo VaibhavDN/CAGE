@@ -1,4 +1,5 @@
 #include "CodeAnalyzer.cpp"
+#define USER_CODE "usersCode2.cpp"
 
 class FileOperations{
     private:
@@ -11,7 +12,7 @@ class FileOperations{
         dataToTokenize = "";
         try{
             ifstream stream;
-            stream.exceptions(ifstream::failbit);
+            //stream.exceptions(ifstream::failbit);
             stream.open(file_name);
             while(!stream.eof()){
                 getline(stream, line);
@@ -20,6 +21,7 @@ class FileOperations{
             stream.close();
         }catch(exception e){
             cout<<"Exception while opening usersCode: "<<e.what()<<endl;
+            exit(1);
         }
     }
 
@@ -145,7 +147,7 @@ class Splitter : public FileOperations{
 };
 
 int mainParser(Splitter splitter){
-    splitter.setDataFromFile("usersCode.cpp");
+    splitter.setDataFromFile(USER_CODE);
     splitter.runSplitter();
     splitter.viewSplitLines();
     splitter.generateIntermediateLanguage();
