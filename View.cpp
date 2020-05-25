@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "flow.cpp"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -59,7 +60,7 @@ class user_canvas : protected editorspace
 		text1.setString(str1);
 
 		total_buffer["text1"] = &text1;
-		text1.setPosition(sf::Vector2f(5, 45));
+		text1.setPosition(sf::Vector2f(5, 5));
 		text1.setCharacterSize(18);
 		text1.setFillColor(sf::Color(4,191,82,255));
 
@@ -73,7 +74,7 @@ class user_canvas : protected editorspace
 	void append_entry(char a)
 	{
 		str1.insert(str1.begin() + cur_pos, a);
-		if(cur1.getPosition().x > szx*0.9)
+		if(cur1.getPosition().x > szx*0.6)
 		{
 			str1.insert(str1.begin() + cur_pos, '\n'); //line wrap functionality
 			++cur_pos;
@@ -124,37 +125,6 @@ class user_canvas : protected editorspace
 	}
 };
 
-class topbar : protected editorspace
-{
-	sf::RectangleShape topbar1;
-
-	public:
-	topbar()
-	{
-		
-		topbar1.setFillColor(sf::Color::Red);
-		total_buffer["topbar1"] = &topbar1;
-		
-		topbar1.setPosition(sf::Vector2f(0,0));
-		topbar1.setSize(sf::Vector2f(szx, 20));
-	}
-};
-
-class toolbar : protected editorspace
-{
-	sf::RectangleShape toolbar1;
-
-	public:
-	toolbar()
-	{
-		toolbar1.setFillColor(sf::Color::Green);
-		total_buffer["toolbar1"] = &toolbar1;
-
-		toolbar1.setPosition(sf::Vector2f(0,20));
-		toolbar1.setSize(sf::Vector2f(szx, 20));
-	}
-
-};
 
 class aux : protected editorspace
 {
@@ -168,7 +138,7 @@ class aux : protected editorspace
 		vertscroll.setFillColor(sf::Color::Yellow);
 		total_buffer["vertscroll"] = &vertscroll;
 
-		vertscroll.setPosition(sf::Vector2f(szx-10, 40));
+		vertscroll.setPosition(sf::Vector2f(szx-10, 5));
 		vertscroll.setSize(sf::Vector2f(10, szy-60));
 	}
 
@@ -185,7 +155,7 @@ class aux : protected editorspace
 	}
 
 	public:
-	void routine(user_canvas *u1, topbar *t1)
+	void routine(user_canvas *u1)
 	{
 		
 		sf::Event e1;
@@ -247,19 +217,24 @@ class aux : protected editorspace
 		}	
 	}
 
-	void draw(user_canvas *u1)
+	void draw(user_canvas *u1, ext *x1)
 	{
 		sf::Clock cl;
 		while (w1->isOpen())
 			{
 				routine_updates(u1);
 				cl.restart();
-				w1->clear(sf::Color(112, 89, 89, 255));
+				w1->clear(sf::Color::Black);
 				for(auto &it : total_buffer)
 				{
 					w1->draw(*it.second);
 				}	
+				x1->f_rend(w1);
+				w1->setView(w1->getDefaultView());
 				w1->display();
+				c1.save(u1->str1);
+				x1->extract();
+				x1->flow_vis();
 				usleep(25000 - cl.restart().asMicroseconds());
 			}
 	}
@@ -271,10 +246,16 @@ int main(int argc, char* argv[])
 {
 	XInitThreads();
 	user_canvas u1(atoi(argv[1]), atoi(argv[2]));
-	topbar to1;
-	toolbar tb1;
+	ifstream file("ts1.cpp");
+    stringstream buff;
+    buff << file.rdbuf();
+    u1.str1 = buff.str();
+	u1.append_entry(' ');
 	aux a1;
-	thread t1(&aux::routine, &a1, &u1, &to1);
-	a1.draw(&u1);
+	ext x1("ts1.cpp");
+	x1.extract();
+	x1.flow_vis();
+	thread t1(&aux::routine, &a1, &u1);
+	a1.draw(&u1, &x1);
 	t1.join();
 }
