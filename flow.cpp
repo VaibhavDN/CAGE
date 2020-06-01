@@ -14,7 +14,11 @@ class ext
     string f_name;
     string fl;
     View v1;
+    bool loop_flag;
     sf::Font ft;
+    unordered_map < int, sf::Color> fo = {{0, Color(120,130,140,255)}, {1, Color(120,230,140,255)}, {2, Color(220,130,140,255)}, 
+                                                {3, Color(120,130,240,255)}, {4, Color(120,30,140,255)}};
+
     //RenderWindow *win;
     
     unordered_map < string, string > f_list;
@@ -86,7 +90,7 @@ public:
             }
         }
 
-        for (auto i = fn_list.begin(); i != fn_list.end(); ++i)
+        /*for (auto i = fn_list.begin(); i != fn_list.end(); ++i)
         {
             cout << i->first << endl;
             for(int  k = 0; k < i->second.size(); ++k)
@@ -94,14 +98,12 @@ public:
                 cout << i->second[k].first << " " << i->second[k].second << endl;
             }
             cout << "\n";
-        }
+        }*/
     }
 
     void flow_vis()
     {
-        unordered_map < int, sf::Color> fo = {{0, Color(120,130,140,255)}, {1, Color(120,230,140,255)}, {2, Color(220,130,140,255)}, 
-                                                {3, Color(120,130,240,255)}, {4, Color(120,30,140,255)}};
-
+        
         
         ft.loadFromFile("DroidSansMono.ttf");
 
@@ -115,7 +117,7 @@ public:
                     t1.setFont(ft);
                     t1.setString(i->second[k].second);
                     t1.setFillColor(fo[i->second[k].first]);
-                    t1.setPosition(10 + i->second[k].first * 10, 10 + k * 50);
+                    t1.setPosition(10 + i->second[k].first * 15, 10 + k * 50);
                     t1.setCharacterSize(15);
                     txt_vec.push_back(t1);
                 }
@@ -132,8 +134,59 @@ public:
         for(int i = 0; i < txt_vec.size(); ++i)
         {
 
+            
             RectangleShape rec;
             FloatRect bounds = txt_vec[i].getGlobalBounds();
+            if(i != txt_vec.size() - 1)
+            {
+                VertexArray conn(Lines, 2);
+                FloatRect bounds2 = txt_vec[i + 1].getGlobalBounds();
+                conn[0].position = Vector2f(bounds.left, bounds.top + bounds.height);
+                conn[1].position = Vector2f(bounds2.left, bounds2.top);
+                conn[0].color = Color::Blue;
+                conn[1].color = Color::Blue;
+                win->draw(conn);
+            }
+
+            if(txt_vec[i].getString() == "{")
+            {
+                int  j = i;
+                while((txt_vec[j].getString() != "}" || txt_vec[j].getFillColor() != txt_vec[i].getFillColor()) && j < txt_vec.size()) ++j;
+
+                VertexArray conn(Lines, 2);
+                FloatRect bounds3 = txt_vec[i - 1].getGlobalBounds();
+                FloatRect bounds2 = txt_vec[j + 1].getGlobalBounds();
+                conn[0].position = Vector2f(bounds3.left, bounds3.top + bounds3.height);
+                conn[1].position = Vector2f(bounds2.left, bounds2.top);
+                conn[0].color = Color::Green;
+                conn[1].color = Color::Green;
+                win->draw(conn);
+
+                if(loop_flag)
+                {
+                    FloatRect bounds4 = txt_vec[j].getGlobalBounds();
+                    VertexArray lop(LineStrip, 4);
+                    lop[0].position = Vector2f(bounds4.left + bounds4.width, bounds4.top + bounds4.height);
+                    lop[1].position = Vector2f(bounds4.left + 200, bounds4.top + bounds4.height);
+                    lop[2].position = Vector2f(bounds4.left + 200, bounds3.top + bounds3.height);
+                    lop[3].position = Vector2f(bounds3.left + bounds3.width, bounds3.top + bounds3.height);
+
+                    lop[0].color = Color::Red;
+                    lop[1].color = Color::Red;
+                    lop[2].color = Color::Red;
+                    lop[3].color = Color::Red;
+                    loop_flag = false;
+
+                    win->draw(lop);
+                }
+
+            }
+            else if(txt_vec[i].getString().substring(0, 3) == "for" || txt_vec[i].getString().substring(0, 5) == "while")
+            {
+                loop_flag = true;
+                //cout << "chala" << endl;
+            }
+
             rec.setPosition(Vector2f(bounds.left - 5, bounds.top - 5));
             rec.setSize(Vector2f(bounds.width + 10, bounds.height + 10));
             rec.setFillColor(Color(0,0,0,0));
@@ -141,6 +194,8 @@ public:
             rec.setOutlineColor(txt_vec[i].getFillColor());
             win->draw(rec);
             win->draw(txt_vec[i]);
+
+            
             
         }
         
