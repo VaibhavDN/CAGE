@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
@@ -14,7 +15,6 @@ class ext
     string f_name;
     string fl;
     View v1;
-    bool loop_flag;
     sf::Font ft;
     unordered_map < int, sf::Color> fo = {{0, Color(120,130,140,255)}, {1, Color(120,230,140,255)}, {2, Color(220,130,140,255)}, 
                                                 {3, Color(120,130,240,255)}, {4, Color(120,30,140,255)}};
@@ -129,6 +129,8 @@ public:
     {
         v1.reset(FloatRect(0, 0, 500, 500));
         v1.setViewport(FloatRect(0.67f, 0.f, 0.33f, 1.f));
+        stack <int> loop_keep;
+        loop_keep.push(-2);
         win->setView(v1);
 
         for(int i = 0; i < txt_vec.size(); ++i)
@@ -150,21 +152,29 @@ public:
 
             if(txt_vec[i].getString() == "{")
             {
+                //cout << "chala1" << endl;
                 int  j = i;
-                while((txt_vec[j].getString() != "}" || txt_vec[j].getFillColor() != txt_vec[i].getFillColor()) && j < txt_vec.size()) ++j;
+                while((txt_vec[j].getString() != "}" || txt_vec[j].getFillColor() != txt_vec[i].getFillColor()) && j < txt_vec.size() - 1) ++j;
 
-                VertexArray conn(Lines, 2);
-                FloatRect bounds3 = txt_vec[i - 1].getGlobalBounds();
-                FloatRect bounds2 = txt_vec[j + 1].getGlobalBounds();
-                conn[0].position = Vector2f(bounds3.left, bounds3.top + bounds3.height);
-                conn[1].position = Vector2f(bounds2.left, bounds2.top);
-                conn[0].color = Color::Green;
-                conn[1].color = Color::Green;
-                win->draw(conn);
-
-                if(loop_flag)
+                if(txt_vec[j].getString() == "}" && txt_vec[j].getFillColor() == txt_vec[i].getFillColor() && j != txt_vec.size() - 1)
                 {
+                    VertexArray conn(Lines, 2);
+                    FloatRect bounds3 = txt_vec[i - 1].getGlobalBounds();
+                    FloatRect bounds2 = txt_vec[j + 1].getGlobalBounds();
+                    conn[0].position = Vector2f(bounds3.left, bounds3.top + bounds3.height);
+                    conn[1].position = Vector2f(bounds2.left, bounds2.top);
+                    conn[0].color = Color::Green;
+                    conn[1].color = Color::Green;
+                    win->draw(conn);
+                    
+                }
+                //cout << "chala2" << endl;
+
+                if(txt_vec[j].getString() == "}" && loop_keep.top() == i - 1)
+                {
+                    //cout << "chala3" << endl;
                     FloatRect bounds4 = txt_vec[j].getGlobalBounds();
+                    FloatRect bounds3 = txt_vec[i - 1].getGlobalBounds();
                     VertexArray lop(LineStrip, 4);
                     lop[0].position = Vector2f(bounds4.left + bounds4.width, bounds4.top + bounds4.height);
                     lop[1].position = Vector2f(bounds4.left + 200, bounds4.top + bounds4.height);
@@ -175,7 +185,7 @@ public:
                     lop[1].color = Color::Red;
                     lop[2].color = Color::Red;
                     lop[3].color = Color::Red;
-                    loop_flag = false;
+                    loop_keep.pop();
 
                     win->draw(lop);
                 }
@@ -183,7 +193,7 @@ public:
             }
             else if(txt_vec[i].getString().substring(0, 3) == "for" || txt_vec[i].getString().substring(0, 5) == "while")
             {
-                loop_flag = true;
+                loop_keep.push(i);
                 //cout << "chala" << endl;
             }
 

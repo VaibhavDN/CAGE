@@ -41,13 +41,14 @@ class user_canvas : protected editorspace
 	sf::RectangleShape cur1;
 	int transparent = 51;
 	int trans_flag = 1;
-	size_t cur_pos = 0;
+	
 	size_t char_pos = 0;
 	char trigger_flag = 'y';
 	
 	
 	public:
 	string str1;
+	size_t cur_pos = 0;
 	user_canvas(int szx1, int szy1)
 	{
 		szx = szx1;
@@ -235,7 +236,7 @@ class aux : protected editorspace
 				c1.save(u1->str1);
 				x1->extract();
 				x1->flow_vis();
-				usleep(25000 - cl.restart().asMicroseconds());
+				usleep(50000 - cl.restart().asMicroseconds());
 			}
 	}
 };
@@ -246,11 +247,13 @@ int main(int argc, char* argv[])
 {
 	XInitThreads();
 	user_canvas u1(atoi(argv[1]), atoi(argv[2]));
-	ifstream file("ts1.cpp");
+	ifstream file(argv[3]);
     stringstream buff;
     buff << file.rdbuf();
     u1.str1 = buff.str();
+	u1.cur_pos = u1.str1.length() - 1;
 	u1.append_entry(' ');
+	u1.back_sp();
 	aux a1;
 	ext x1("ts1.cpp");
 	x1.extract();

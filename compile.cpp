@@ -12,12 +12,12 @@ class compile
         fstream file;
         f_name = "ts1.cpp";
         file.open(f_name, ios::out);
-        file << code << endl;
+        file << code;
         file.close();
     }
 
     void comp()
     {
-        system("gnome-terminal -x sh -c 'g++ ts1.cpp -o ts1 ; ./ts1;echo ; echo ;echo Execution complete; echo press enter to exit; rm ts; read line'");
+        system("gnome-terminal -x sh -c 'g++ ts1.cpp -o ts1 ; ./ts1;echo ; echo ;echo Execution complete; echo press enter to exit; rm ts1; read line'");
     }
 };
