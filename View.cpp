@@ -72,6 +72,11 @@ class user_canvas : protected editorspace
 
 	}
 
+	int get_cur_y()
+	{
+		return cur1.getPosition().y;
+	}
+
 	void append_entry(char a)
 	{
 		str1.insert(str1.begin() + cur_pos, a);
@@ -131,7 +136,9 @@ class aux : protected editorspace
 {
 	sf::RectangleShape vertscroll;
 	int kflag1 = 0;
-	compile c1;
+	
+
+	int top = 0;
 
 	public:
 	aux()
@@ -153,13 +160,15 @@ class aux : protected editorspace
 	{
 		cursor(u1);
 		//cout<<"chala\n";
+		
 	}
 
 	public:
-	void routine(user_canvas *u1)
+	void routine(user_canvas *u1, ext *x1, compile *c1)
 	{
 		
 		sf::Event e1;
+		Mouse m1;
 		while(w1->isOpen())
 		{
 			while (w1->pollEvent(e1))
@@ -194,11 +203,15 @@ class aux : protected editorspace
 					}
 					else if(e1.key.code == sf::Keyboard::S && kflag1 == 1)
 					{
-						c1.save(u1->str1);
+						c1->save(u1->str1);
 					}
 					else if(e1.key.code == sf::Keyboard::C && kflag1 == 1)
 					{
-						c1.comp();
+						c1->comp();
+					}
+					else if(e1.key.code == sf::Keyboard::T && kflag1 == 1)
+					{
+						x1->set_fun_point();
 					}
 				}
 				else if(e1.type == sf::Event::KeyReleased)
@@ -208,19 +221,40 @@ class aux : protected editorspace
 						kflag1 = 0;
 					}
 				}
+				else if(e1.type == sf::Event::MouseWheelScrolled)
+				{
+					if(m1.getPosition().x > 1000)
+					{
+						if(e1.mouseWheel.x > 0) x1->modify_top(-1);
+						else x1->modify_top(1);
+					}
+					else
+					{
+						if(e1.mouseWheel.x > 0) modify_top(-1);
+						else modify_top(1);
+					}
+				}
 				else if(e1.type == sf::Event::TextEntered)
 				{
 					if (e1.text.unicode != 8 && e1.text.unicode !=13 && kflag1 == 0)
 					u1->append_entry((char)e1.text.unicode);
 					//cout << "chala\n";
+					if(u1->get_cur_y() - top > 450) top += (u1->get_cur_y() - top - 450);
 				}
 			}
 		}	
 	}
 
-	void draw(user_canvas *u1, ext *x1)
+	void modify_top(int c)
+    {
+        if(top >= 0) top += c*20;
+        if(top < 0) top = 0;
+    }
+
+	void draw(user_canvas *u1, ext *x1, compile *c1)
 	{
 		sf::Clock cl;
+		View v2;
 		while (w1->isOpen())
 			{
 				routine_updates(u1);
@@ -231,9 +265,10 @@ class aux : protected editorspace
 					w1->draw(*it.second);
 				}	
 				x1->f_rend(w1);
-				w1->setView(w1->getDefaultView());
+				v2.reset(FloatRect(0,top, 1500, 500));
+				w1->setView(v2);
 				w1->display();
-				c1.save(u1->str1);
+				c1->save(u1->str1);
 				x1->extract();
 				x1->flow_vis();
 				usleep(50000 - cl.restart().asMicroseconds());
@@ -255,10 +290,11 @@ int main(int argc, char* argv[])
 	u1.append_entry(' ');
 	u1.back_sp();
 	aux a1;
-	ext x1("ts1.cpp");
+	ext x1(argv[3]);
+	compile c1(argv[3]);
 	x1.extract();
 	x1.flow_vis();
-	thread t1(&aux::routine, &a1, &u1);
-	a1.draw(&u1, &x1);
+	thread t1(&aux::routine, &a1, &u1, &x1, &c1);
+	a1.draw(&u1, &x1, &c1);
 	t1.join();
 }

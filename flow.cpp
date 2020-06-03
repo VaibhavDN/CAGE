@@ -16,6 +16,8 @@ class ext
     string fl;
     View v1;
     sf::Font ft;
+    int top = 0;
+    int fun_point = 0;
     unordered_map < int, sf::Color> fo = {{0, Color(120,130,140,255)}, {1, Color(120,230,140,255)}, {2, Color(220,130,140,255)}, 
                                                 {3, Color(120,130,240,255)}, {4, Color(120,30,140,255)}};
 
@@ -24,6 +26,7 @@ class ext
     unordered_map < string, string > f_list;
     unordered_map<string, vector < pair<int, string> > > fn_list;
     vector <Text> txt_vec;
+    vector <string> fun_name_vec;
 public:
     ext(string s1)
     {
@@ -35,6 +38,7 @@ public:
         f_list.clear();
         fn_list.clear();
         txt_vec.clear();
+        fun_name_vec.clear();
         maker();
     }
 
@@ -56,6 +60,7 @@ public:
             {
                 while(fl[j++] != ' ');
                 fun =  fl.substr(j,i-j);
+                fun_name_vec.push_back(fun);
             }
             if(curl_b != 0 && fl[i] != '\t')
             {
@@ -101,6 +106,12 @@ public:
         }*/
     }
 
+    void set_fun_point()
+    {
+        if(fun_name_vec.size() - 1 > fun_point) ++fun_point;
+        else fun_point = 0;
+    }
+
     void flow_vis()
     {
         
@@ -109,7 +120,7 @@ public:
 
         for (auto i = fn_list.begin(); i != fn_list.end(); ++i)
         {
-            if(i->first == "main")
+            if(i->first == fun_name_vec[fun_name_vec.size() - 1 - fun_point])
             {
                 for(int  k = 0; k < i->second.size(); ++k)
                 {
@@ -125,9 +136,15 @@ public:
         }
     }
 
+    void modify_top(int c)
+    {
+        if(top >= 0) top += c*20;
+        if(top < 0) top = 0;
+    }
+
     void f_rend(RenderWindow *win)
     {
-        v1.reset(FloatRect(0, 0, 500, 500));
+        v1.reset(FloatRect(0, top, 500, 500));
         v1.setViewport(FloatRect(0.67f, 0.f, 0.33f, 1.f));
         stack <int> loop_keep;
         loop_keep.push(-2);
@@ -177,8 +194,8 @@ public:
                     FloatRect bounds3 = txt_vec[i - 1].getGlobalBounds();
                     VertexArray lop(LineStrip, 4);
                     lop[0].position = Vector2f(bounds4.left + bounds4.width, bounds4.top + bounds4.height);
-                    lop[1].position = Vector2f(bounds4.left + 200, bounds4.top + bounds4.height);
-                    lop[2].position = Vector2f(bounds4.left + 200, bounds3.top + bounds3.height);
+                    lop[1].position = Vector2f(bounds4.left + 300, bounds4.top + bounds4.height);
+                    lop[2].position = Vector2f(bounds4.left + 300, bounds3.top + bounds3.height);
                     lop[3].position = Vector2f(bounds3.left + bounds3.width, bounds3.top + bounds3.height);
 
                     lop[0].color = Color::Red;
