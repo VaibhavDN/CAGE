@@ -41,6 +41,7 @@ class user_canvas : protected editorspace
 	sf::RectangleShape cur1;
 	int transparent = 51;
 	int trans_flag = 1;
+	unordered_map < int, int> snap_look;
 	
 	size_t char_pos = 0;
 	char trigger_flag = 'y';
@@ -77,12 +78,29 @@ class user_canvas : protected editorspace
 		return cur1.getPosition().y;
 	}
 
+	void build_snap_look()
+	{
+		for(int i = 0; i < str1.length(); ++i)
+		{
+			if(str1[i] == '\n')
+			{
+				snap_look[text1.findCharacterPos(i).y] = i;
+				//cout << text1.findCharacterPos(i).y << " " << i << endl;
+			}
+		}
+	}
+
 	void append_entry(char a)
 	{
 		str1.insert(str1.begin() + cur_pos, a);
+		if(a == '\n')
+		{
+			snap_look[text1.findCharacterPos(cur_pos).y] = cur_pos;
+		}
 		if(cur1.getPosition().x > szx*0.6)
 		{
 			str1.insert(str1.begin() + cur_pos, '\n'); //line wrap functionality
+			snap_look[text1.findCharacterPos(cur_pos).y] = cur_pos;
 			++cur_pos;
 		}
 		text1.setString(str1);
@@ -111,6 +129,11 @@ class user_canvas : protected editorspace
 		{
 			++cur_pos;
 		}
+	}
+
+	void set_snap_pos(int mpos)
+	{
+		cur_pos = snap_look[mpos/21 * 21 + 5];
 	}
 
 	void set_cursor()
@@ -232,7 +255,7 @@ class aux : protected editorspace
 				}
 				else if(e1.type == sf::Event::MouseWheelScrolled)
 				{
-					if(m1.getPosition().x > 1000)
+					if(m1.getPosition(*w1).x > 1000)
 					{
 						if(e1.mouseWheel.x > 0) x1->modify_top(-1);
 						else x1->modify_top(1);
@@ -242,6 +265,11 @@ class aux : protected editorspace
 						if(e1.mouseWheel.x > 0) modify_top(-1);
 						else modify_top(1);
 					}
+				}
+				else if(e1.type == sf::Event::MouseButtonPressed)
+				{
+					//cout << m1.getPosition(*w1).y << endl;
+					u1->set_snap_pos(m1.getPosition(*w1).y + top);
 				}
 				else if(e1.type == sf::Event::TextEntered)
 				{
@@ -298,6 +326,7 @@ int main(int argc, char* argv[])
 	u1.cur_pos = u1.str1.length() - 1;
 	u1.append_entry(' ');
 	u1.back_sp();
+	u1.build_snap_look();
 	aux a1;
 	ext x1(argv[3]);
 	compile c1(argv[3]);

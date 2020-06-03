@@ -337,9 +337,6 @@ public:
         tx9.setFillColor(Color(148, 24, 219, 255));
         d1.push_back(&tx9);
 
-
-
-
         for(auto i = 0; i < d1.size(); ++i)
         {
             w1->draw(*d1[i]);
