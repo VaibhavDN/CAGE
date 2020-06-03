@@ -136,6 +136,7 @@ class aux : protected editorspace
 {
 	sf::RectangleShape vertscroll;
 	int kflag1 = 0;
+	int flow_rend_mode = 0;
 	
 
 	int top = 0;
@@ -213,6 +214,14 @@ class aux : protected editorspace
 					{
 						x1->set_fun_point();
 					}
+					else if(e1.key.code == sf::Keyboard::H && kflag1 == 1)
+					{
+						flow_rend_mode = 1;
+					}
+					else if(e1.key.code == sf::Keyboard::R && kflag1 == 1)
+					{
+						flow_rend_mode = 0;
+					}
 				}
 				else if(e1.type == sf::Event::KeyReleased)
 				{
@@ -247,7 +256,7 @@ class aux : protected editorspace
 
 	void modify_top(int c)
     {
-        if(top >= 0) top += c*20;
+        if(top >= 0) top += c*40;
         if(top < 0) top = 0;
     }
 
@@ -264,7 +273,7 @@ class aux : protected editorspace
 				{
 					w1->draw(*it.second);
 				}	
-				x1->f_rend(w1);
+				x1->f_rend(w1, flow_rend_mode);
 				v2.reset(FloatRect(0,top, 1500, 500));
 				w1->setView(v2);
 				w1->display();

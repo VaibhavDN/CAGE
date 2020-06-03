@@ -15,7 +15,7 @@ class ext
     string f_name;
     string fl;
     View v1;
-    sf::Font ft;
+    sf::Font ft, ft2;
     int top = 0;
     int fun_point = 0;
     unordered_map < int, sf::Color> fo = {{0, Color(120,130,140,255)}, {1, Color(120,230,140,255)}, {2, Color(220,130,140,255)}, 
@@ -31,6 +31,7 @@ public:
     ext(string s1)
     {
         f_name = s1;
+
     }
 
     void extract()
@@ -128,7 +129,7 @@ public:
                     t1.setFont(ft);
                     t1.setString(i->second[k].second);
                     t1.setFillColor(fo[i->second[k].first]);
-                    t1.setPosition(10 + i->second[k].first * 15, 10 + k * 50);
+                    t1.setPosition(10 + i->second[k].first * 15, 30 + k * 50);
                     t1.setCharacterSize(15);
                     txt_vec.push_back(t1);
                 }
@@ -142,13 +143,28 @@ public:
         if(top < 0) top = 0;
     }
 
-    void f_rend(RenderWindow *win)
+    void f_rend(RenderWindow *win, int rend_mode)
     {
+        if(rend_mode == 1)
+        {
+            help_rend(win);
+            return;
+        }
         v1.reset(FloatRect(0, top, 500, 500));
         v1.setViewport(FloatRect(0.67f, 0.f, 0.33f, 1.f));
         stack <int> loop_keep;
         loop_keep.push(-2);
         win->setView(v1);
+
+        Text fun_name;
+        ft2.loadFromFile("FiraSans-Book.otf");
+        fun_name.setFont(ft2);
+        fun_name.setString(fun_name_vec[fun_name_vec.size() - 1 - fun_point]);
+        fun_name.setCharacterSize(20);
+        fun_name.setPosition(10, 0);
+        fun_name.setFillColor(Color::Cyan);
+        win->draw(fun_name);
+
 
         for(int i = 0; i < txt_vec.size(); ++i)
         {
@@ -226,6 +242,109 @@ public:
             
         }
         
+    }
+
+    void help_rend(RenderWindow *w1)
+    {
+        vector < sf::Drawable * > d1;
+        v1.reset(FloatRect(0, 0, 500, 500));
+        v1.setViewport(FloatRect(0.67f, 0.f, 0.33f, 1.f));
+        w1->setView(v1);
+
+        ft.loadFromFile("MaldiniBold-OVZO6.ttf");
+        Text tx1, tx2, tx3, tx4, tx5, tx6, tx7, tx8, tx9;
+        tx1.setFont(ft);
+        tx1.setString("CodeFlow");
+        tx1.setCharacterSize(60);
+        tx1.setFillColor(Color(255, 104, 23, 255));
+        tx1.setPosition(20, 20);
+        d1.push_back(&tx1);
+
+        ft2.loadFromFile("BloggerSans-Bold.ttf");
+        tx2.setFont(ft2);
+        tx2.setString("Version 0.5 (beta build)");
+        tx2.setCharacterSize(16);
+        tx2.setFillColor(Color::Yellow);
+        FloatRect tx1b = tx1.getGlobalBounds();
+        tx2.setPosition(tx1b.left + tx1b.width, tx1b.top + tx1b.height - 16);
+        d1.push_back(&tx2);
+
+        tx3.setFont(ft2);
+        tx3.setString(": Help Section :");
+        tx3.setPosition(20, 100);
+        tx3.setCharacterSize(30);
+        tx3.setFillColor(Color(148, 24, 219, 255));
+        d1.push_back(&tx3);
+
+        tx4.setFont(ft2);
+        tx4.setString("Codeflow reference :-");
+        tx4.setPosition(20, 150);
+        tx4.setCharacterSize(25);
+        tx4.setFillColor(Color(148, 24, 219, 255));
+        d1.push_back(&tx4);
+
+        VertexArray rd(Lines, 2);
+        rd[0].position = Vector2f(20, 195);
+        rd[1].position = Vector2f(50, 195);
+        rd[0].color = Color::Red;
+        rd[1].color = Color::Red;
+        VertexArray gr(Lines, 2);
+        gr[0].position = Vector2f(20, 225);
+        gr[1].position = Vector2f(50, 225);
+        gr[0].color = Color::Green;
+        gr[1].color = Color::Green;
+        VertexArray bl(Lines, 2);
+        bl[0].position = Vector2f(20, 255);
+        bl[1].position = Vector2f(50, 255);
+        bl[0].color = Color::Blue;
+        bl[1].color = Color::Blue;
+        d1.push_back(&rd);
+        d1.push_back(&gr);
+        d1.push_back(&bl);
+
+        tx5.setFont(ft2);
+        tx5.setString("Represents a closed loop");
+        tx5.setPosition(60, 185);
+        tx5.setCharacterSize(20);
+        tx5.setFillColor(Color(148, 24, 219, 255));
+        d1.push_back(&tx5);
+
+        tx6.setFont(ft2);
+        tx6.setString("Represents failure of a conditional statement");
+        tx6.setPosition(60, 215);
+        tx6.setCharacterSize(20);
+        tx6.setFillColor(Color(148, 24, 219, 255));
+        d1.push_back(&tx6);
+
+        tx7.setFont(ft2);
+        tx7.setString("Represents normal flow in consecutive order");
+        tx7.setPosition(60, 245);
+        tx7.setCharacterSize(20);
+        tx7.setFillColor(Color(148, 24, 219, 255));
+        d1.push_back(&tx7);
+
+        tx8.setFont(ft2);
+        tx8.setString("Keyboard shortcuts :-");
+        tx8.setPosition(20, 275);
+        tx8.setCharacterSize(25);
+        tx8.setFillColor(Color(148, 24, 219, 255));
+        d1.push_back(&tx8);
+
+        tx9.setFont(ft2);
+        tx9.setString("alt + s -> Save file\nalt + c -> Compile and run\nalt + h -> Open help section\nalt + d -> Open debugger\nalt + t -> Cycle through different functions\nalt + r -> Restore codeflow window\n");
+        tx9.setPosition(20, 310);
+        tx9.setCharacterSize(20);
+        tx9.setFillColor(Color(148, 24, 219, 255));
+        d1.push_back(&tx9);
+
+
+
+
+        for(auto i = 0; i < d1.size(); ++i)
+        {
+            w1->draw(*d1[i]);
+        }
+
     }
 
     
