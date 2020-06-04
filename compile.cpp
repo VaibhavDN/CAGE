@@ -26,6 +26,24 @@ class compile
         file.close();
     }
 
+    void debug(string code)
+    {
+        for(int i = 0; i < code.length(); ++i)
+        {
+            if(code[i] == '{')
+            {
+                int j = i;
+                while(code[--j] != '\n');
+                code[j] = ' ';
+            }
+        }
+        fstream file;
+        file.open("usersCode2.cpp", ios::out);
+        file << code;
+        file.close();
+        system("./VisualizeFlow");
+    }
+
     void comp()
     {
         char s2[200] = "gnome-terminal -x sh -c 'g++ "; //+ f_name + "; ./a.out;echo ; echo ;echo Execution complete; echo press enter to exit; read line'";

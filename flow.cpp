@@ -121,17 +121,20 @@ public:
 
         for (auto i = fn_list.begin(); i != fn_list.end(); ++i)
         {
-            if(i->first == fun_name_vec[fun_name_vec.size() - 1 - fun_point])
+            if(!fun_name_vec.empty())
             {
-                for(int  k = 0; k < i->second.size(); ++k)
+                if(i->first == fun_name_vec[fun_name_vec.size() - 1 - fun_point])
                 {
-                    Text t1;
-                    t1.setFont(ft);
-                    t1.setString(i->second[k].second);
-                    t1.setFillColor(fo[i->second[k].first]);
-                    t1.setPosition(10 + i->second[k].first * 15, 30 + k * 50);
-                    t1.setCharacterSize(15);
-                    txt_vec.push_back(t1);
+                    for(int  k = 0; k < i->second.size(); ++k)
+                    {
+                        Text t1;
+                        t1.setFont(ft);
+                        t1.setString(i->second[k].second);
+                        t1.setFillColor(fo[i->second[k].first]);
+                        t1.setPosition(10 + i->second[k].first * 15, 30 + k * 50);
+                        t1.setCharacterSize(15);
+                        txt_vec.push_back(t1);
+                    }
                 }
             }
         }
@@ -156,14 +159,17 @@ public:
         loop_keep.push(-2);
         win->setView(v1);
 
-        Text fun_name;
-        ft2.loadFromFile("FiraSans-Book.otf");
-        fun_name.setFont(ft2);
-        fun_name.setString(fun_name_vec[fun_name_vec.size() - 1 - fun_point]);
-        fun_name.setCharacterSize(20);
-        fun_name.setPosition(10, 0);
-        fun_name.setFillColor(Color::Cyan);
-        win->draw(fun_name);
+        if(!fun_name_vec.empty())
+        {
+            Text fun_name;
+            ft2.loadFromFile("FiraSans-Book.otf");
+            fun_name.setFont(ft2);
+            fun_name.setString(fun_name_vec[fun_name_vec.size() - 1 - fun_point]);
+            fun_name.setCharacterSize(20);
+            fun_name.setPosition(10, 0);
+            fun_name.setFillColor(Color::Cyan);
+            win->draw(fun_name);
+        }
 
 
         for(int i = 0; i < txt_vec.size(); ++i)
@@ -262,7 +268,7 @@ public:
 
         ft2.loadFromFile("BloggerSans-Bold.ttf");
         tx2.setFont(ft2);
-        tx2.setString("Version 0.5 (beta build)");
+        tx2.setString("CAGE");
         tx2.setCharacterSize(16);
         tx2.setFillColor(Color::Yellow);
         FloatRect tx1b = tx1.getGlobalBounds();

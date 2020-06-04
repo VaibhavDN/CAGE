@@ -64,7 +64,8 @@ class user_canvas : protected editorspace
 		total_buffer["text1"] = &text1;
 		text1.setPosition(sf::Vector2f(5, 5));
 		text1.setCharacterSize(18);
-		text1.setFillColor(sf::Color(4,191,82,255));
+		//text1.setFillColor(sf::Color(4,191,82,255));
+		text1.setFillColor(Color(153, 255, 204, 255));
 
 		total_buffer["cur1"] = &cur1;
 		cur1.setFillColor(sf::Color(255,255,255,transparent));
@@ -140,13 +141,13 @@ class user_canvas : protected editorspace
 	{
 		if(trans_flag == 1)
 		{
-			transparent -= 2;
+			transparent -= 4;
 			cur1.setFillColor(sf::Color(255,255,255, transparent));
 			if(transparent == 0) trans_flag = 0;
 		}
 		else
 		{
-			transparent += 2;
+			transparent += 4;
 			cur1.setFillColor(sf::Color(255,255,255, transparent));
 			if(transparent > 100) trans_flag = 1;
 		}
@@ -244,6 +245,13 @@ class aux : protected editorspace
 					else if(e1.key.code == sf::Keyboard::R && kflag1 == 1)
 					{
 						flow_rend_mode = 0;
+					}
+					else if(e1.key.code == sf::Keyboard::D && kflag1 == 1)
+					{
+						//thread t3(&compile::debug, c1, u1->str1);
+						c1->debug(u1->str1);
+						kflag1 = 0;
+						break;
 					}
 				}
 				else if(e1.type == sf::Event::KeyReleased)
